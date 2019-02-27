@@ -4,7 +4,8 @@ Basic shell from MarquisLP Github.
 
 Revision history:
 @Antonio & @Colin (2/16/19) created file
-@Colin (2/16/19 5:38pm) added a basic shell for a pygame loop
+Colin  added a basic shell for a pygame loop (2/16/19 5:38pm)
+Colin You cant control me! @ 2/27/2019 2:41:37pm
 """
 import sys
 import pygame
