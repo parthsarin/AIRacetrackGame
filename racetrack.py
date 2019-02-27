@@ -3,9 +3,8 @@ File created by Antonio and Colin 2/16/19
 added a basic shell for a pygame loop @ Colin 2/16/19 5:38pm
 
 """
-"""This module contains all of the necessary PyGame components for
-running a simplified game loop.
-Use it for test cases on PyGame-related code.
+"""
+Basic shell from MarquisLP github
 """
 import sys
 import pygame
