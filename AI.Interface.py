@@ -17,15 +17,14 @@ def runAI(distances):
 	:distances: A vector of eight numbers representing the distances
 	to the wall in eight directions.
 
-		CONVENTION:
-						0
-				   7	|	 1
-					\		/
+	CONVENTION:
+        7    0    1
+         \   |   /
 
-				  6 –	X	– 2
+         6 – X – 2
 
-					/	|	\
-				   5	4	 3
+          /  |   \
+         5   4    3
 
 	:return: An instance of the IO.Movement class that describes where
 	the car should move.
