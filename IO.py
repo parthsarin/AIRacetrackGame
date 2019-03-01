@@ -32,7 +32,7 @@ class Movement:
         :np_array: A numpy array from which to read movement values.
         """
         # Parse the arguments
-        left, right, front, back = _get_params(args, kwargs)
+        left, right, front, back = self._get_params(args, kwargs)
 
         # Moving in opposite directions goes nowhere
         if left and right:
