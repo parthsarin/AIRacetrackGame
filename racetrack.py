@@ -1,11 +1,10 @@
 """
-File created by Antonio and Colin 2/16/19
-added a basic shell for a pygame loop @ Colin 2/16/19 5:38pm
+An interactive file, built on pygame, to display a racetrack.
+Basic shell from MarquisLP Github.
 
-"""
-"""This module contains all of the necessary PyGame components for
-running a simplified game loop.
-Use it for test cases on PyGame-related code.
+Revision history:
+@Antonio & @Colin (2/16/19) created file
+@Colin (2/16/19 5:38pm) added a basic shell for a pygame loop
 """
 import sys
 import pygame
