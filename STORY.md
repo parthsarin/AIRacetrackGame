@@ -28,13 +28,13 @@ Being the dilligent workers we are, we arrived promptly at lab and instantly got
 I'm just kidding of course. Colin was, like 30 minutes late, and everyone else wasted a good amount of time watching YouTube videos, making Parth a Genius Bar appointment (his phone just... died), and trying desperatly not to kill off another one of Jade's seven remaining brain cells.
 
 Actually, since Parth's phone had died, he couldn't use Two-Factor Authentication to fill out the attendance code for the day, so he promised to write Sam a birthday haiku in exchange. Here's what he came up with (after Googling to remind himself about the syllable counts):
-> Has a sweet, cute dog
-> Writes excellent Python code
+> Has a sweet, cute dog  
+> Writes excellent Python code  
 > Happy birthday, Sam.
 
 Yeah, he's not a poet. Although... Sam's response:
-> THANK YOU!
-> I love it.
+> THANK YOU!  
+> I love it.  
 > --Sam
 
 ### The Graphics Journey: Interactive Map Generation and A Promising Start
