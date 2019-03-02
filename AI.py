@@ -4,7 +4,7 @@ Interfaces with the AI algorithm.
 import IO
 
 ### AIs ###
-import AI.longestdistance as ld
+import AIlongestdistance as ld
 
 CURRENT_DECISION_FN = ld.process
 
@@ -23,8 +23,8 @@ def runAI(distances, velocity):
 
          6 – X – 2
 
-          /  |   \
-         5   4    3
+         /   |   \
+        5    4    3
 
     :return: An instance of the IO.Movement class that describes where
     the car should move.
