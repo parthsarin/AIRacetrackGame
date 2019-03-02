@@ -4,7 +4,7 @@ Interfaces with the AI algorithm.
 import IO
 
 ### AIs ###
-import AI.LongestDistance as ld
+import AI.longestdistance as ld
 
 CURRENT_DECISION_FN = ld.process
 

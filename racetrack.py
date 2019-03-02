@@ -152,4 +152,5 @@ if pygame_modules_have_loaded():
             else:
                 pygame.time.wait(1)
 
+if __name__ == '__main__':
     main()
