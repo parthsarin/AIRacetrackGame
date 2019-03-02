@@ -9,11 +9,11 @@ class Movement:
 
     Acceptable syntax:
         Movement(front=True, right=True)
-        Movement(False, False, True, False) # left, right, front, back
+        not implemented: Movement(False, False, True, False) # left, right, front, back
         Movement(np.array([0, 1, 0, 0])) # left, right, front, back
         Movement(np_array=np.array([0, 1, 0, 1]))
 
-    Note: If you want to initialize with a regular array instead of a numpy
+    NOT IMPLEMENTED ~ Note: If you want to initialize with a regular array instead of a numpy
     array, just unpack it. E.g.:
         movement = [False, False, True, False]
         Movement(*movement)
@@ -71,7 +71,7 @@ class Movement:
         if 'np_array' in kwargs:
             arg = kwargs['np_array']
             if arg.shape == (4,):
-                left, right, front, back = self._np_init(kwargs['np_array'])
+                return self._np_init(kwargs['np_array'])
             else:
                 warnings.warn('Your numpy array does not have the correct shape. Should be (4,).', SyntaxWarning)
                 print("Not accepting the keyword argument {}.".format(str(arg)))
@@ -80,14 +80,14 @@ class Movement:
         for arg in args:
             if type(arg) is np.ndarray:
                 if arg.shape == (4,):
-                    left, right, front, back = self._np_init(arg)
+                    return self._np_init(arg)
                 else:
                     warnings.warn('Your numpy array does not have the correct shape. Should be (4,).', SyntaxWarning)
                     print("Not accepting the variadic positional argument {}.".format(arg))
 
-        # ...if the first four are boolean
-        if all(map(lambda x: type(x) is bool, args[:4])):
-            left, right, front, back = args[:4]
+        # # ...if the first four are boolean
+        # if all(map(lambda x: type(x) is bool, args[:4])) and len(args) == 4:
+        #     return args[:4]
 
         # ...or if any of the parameters are in kwargs
         if 'left' in kwargs:
@@ -113,3 +113,24 @@ class Movement:
         :np_array: A numpy array from which to read movement values.
         """
         return tuple(map(bool, np_array))
+
+class State:
+    def __init__(self, distances, velocity):
+        """Initialize the State class.
+
+        :velocity: An array of two numbers representing the velocity
+        :distances: A vector of eight numbers representing the distances
+        to the wall in eight directions.
+
+        CONVENTION:
+            7    0    1
+             \   |   /
+
+             6 – X – 2
+
+             /   |   \
+            5    4    3
+        """
+        self.velocity = np.array(velocity)
+        self.distances = distances
+        self.velocity_magnitude = np.linalg.norm(self.velocity)
