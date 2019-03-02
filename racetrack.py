@@ -16,6 +16,19 @@ from pygame.locals import *
 FRAME_RATE = 60.0
 SCREEN_SIZE = (640, 480)
 degree = 0
+blue = (0,0,255)
+
+class car:
+    def __init__(self, rotation, location, points, width, height):
+        self.rotation = 0
+        self.location = 0
+        self.points = (80, 0, 40, 30)
+        self.width = 10
+        self.height = 10
+
+    def draw_rect(self):
+        pygame.draw.rect(game_screen,blue,(200,150,100,50))
+
 
 def pygame_modules_have_loaded():
     success = True
@@ -28,6 +41,9 @@ def pygame_modules_have_loaded():
         success = False
 
     return success
+
+
+       
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -59,47 +75,52 @@ if pygame_modules_have_loaded():
         # Add in code to be run during each update cycle.
         # screen provides the PyGame Surface for the game window.
         # time provides the seconds elapsed since the last update.
+       
         screen.fill((40, 40, 40))
 
-        #create new surface with white BG
-        surf =  pygame.Surface((100, 100))
-        surf.fill((255, 255, 255))
-        #set a color key for blitting
-        surf.set_colorkey((255, 0, 0))
+        testcar = car(0, 0, (200,150,100,50), 10, 10)
+        testcar.draw_rect()
+        #pygame.draw.rect(game_screen,blue,(200,150,100,50))
 
-        #create shapes so you can tell rotation is happenning
-        bigger =  pygame.Rect(0, 0, 100, 50)
-        smaller = pygame.Rect(25, 50, 50, 50)
+        # #create new surface with white BG
+        # surf =  pygame.Surface((100, 100))
+        # surf.fill((255, 255, 255))
+        # #set a color key for blitting
+        # surf.set_colorkey((255, 0, 0))
 
-        #draw those two shapes to that surface
-        pygame.draw.rect(surf, (100, 0, 0), bigger)
-        pygame.draw.rect(surf, (100, 0, 0), smaller)
+        # #create shapes so you can tell rotation is happenning
+        # bigger =  pygame.Rect(0, 0, 100, 50)
+        # smaller = pygame.Rect(25, 50, 50, 50)
 
-        ##ORIGINAL UNCHANGED
-        #what coordinates will the static image be placed:
-        where = 200, 200
+        # #draw those two shapes to that surface
+        # pygame.draw.rect(surf, (100, 0, 0), bigger)
+        # pygame.draw.rect(surf, (100, 0, 0), smaller)
 
-        #draw surf to screen and catch the rect that blit returns
-        blittedRect = screen.blit(surf, where)
+        # ##ORIGINAL UNCHANGED
+        # #what coordinates will the static image be placed:
+        # where = 200, 200
 
-        ##ROTATED
-        #get center of surf for later
-        oldCenter = blittedRect.center
+        # #draw surf to screen and catch the rect that blit returns
+        # blittedRect = screen.blit(surf, where)
 
-        #rotate surf by DEGREE amount degrees
-        rotatedSurf =  pygame.transform.rotate(surf, degree)
+        # ##ROTATED
+        # #get center of surf for later
+        # oldCenter = blittedRect.center
 
-        #get the rect of the rotated surf and set it's center to the oldCenter
-        rotRect = rotatedSurf.get_rect()
-        rotRect.center = oldCenter
+        # #rotate surf by DEGREE amount degrees
+        # rotatedSurf =  pygame.transform.rotate(surf, degree)
 
-        #draw rotatedSurf with the corrected rect so it gets put in the proper spot
-        screen.blit(rotatedSurf, rotRect)
+        # #get the rect of the rotated surf and set it's center to the oldCenter
+        # rotRect = rotatedSurf.get_rect()
+        # rotRect.center = oldCenter
+
+        # #draw rotatedSurf with the corrected rect so it gets put in the proper spot
+        # screen.blit(rotatedSurf, rotRect)
 
         #change the degree of rotation
-        degree += 5
-        if degree > 360:
-            degree = 0
+        #degree += 5
+        #if degree > 360:
+        #    degree = 0
 
         #show the screen surface
         pygame.display.flip()
