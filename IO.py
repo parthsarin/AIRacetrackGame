@@ -59,6 +59,29 @@ class Movement:
 
         return output
 
+    def asDirection(self):
+        if self.front:
+            if self.right:
+                return 1
+            elif self.left:
+                return 7
+            else:
+                return 0
+        elif self.back:
+            if self.right:
+                return 3
+            elif self.left:
+                return 5
+            else:
+                return 4
+        else:
+            if self.right:
+                return 2
+            elif self.left:
+                return 6
+            else: 
+               return 8
+
     def _get_params(self, args, kwargs):
         """Parses `args` and `kwargs` for the left, right, front, and back
         variables.
@@ -93,7 +116,7 @@ class Movement:
         if 'left' in kwargs:
             left = kwargs['left']
         if 'right' in kwargs:
-            right = kwargs['left']
+            right = kwargs['right']
         if 'front' in kwargs:
             front = kwargs['front']
         if 'back' in kwargs:
@@ -114,6 +137,9 @@ class Movement:
         """
         return tuple(map(bool, np_array))
 
+    def __repr__(self):
+        return "Left: {}, Right: {}, Front: {}, Back: {}".format(self.left, self.right,self.front, self.back)
+
 class State:
     def __init__(self, distances, velocity):
         """Initialize the State class.
@@ -126,7 +152,7 @@ class State:
             7    0    1
              \   |   /
 
-             6 – X – 2
+             6 – 8 – 2
 
              /   |   \
             5    4    3
