@@ -90,7 +90,9 @@ The second red flag is that if there are, say, 10 entries in the table which hav
 
 The third problem is that our algorithm learns VERY fast. As soon as it has data in its table, it's relying entirely on that in its future judgements. This is generally a bad idea in machine learning, but probably not too difficult to fix in a pinch (maybe they could make their algorithm learn at a rate proportional to the size of the Q-table).
 
-But, all said and done, the algorithm worked(...ish... probably an important note: we are not legally liable for any misleading statements)! Without any data, Jade and Parth wanted the car to default to moving forward. Because of the way Python sorts lists, it went *every direction except forward* before it went forward. It was kinda like pushing a grocery cart at a store: it moved in every direction they didn't want it to move, including backwards, before, after wrestling with it (i.e., Jade: "We could hardcode it." Parth: "Great! You got this, Jade!"; Parth may have usurped Jade's moral-support role...), it finally moved forwards.
+But, all said and done, the algorithm worked(...ish... probably an important note: we are not legally liable for any misleading statements)! Without any data, Jade and Parth wanted the car to default to moving forward. Because of the way Python sorts lists, it went *every direction except forward* before it went forward. It was kinda like pushing a grocery cart at a store: it moved in every direction they didn't want it to move, including backwards, before, after wrestling with it, it finally moved forwards. Well, I say 'wrestling'... it was mostly this:
+> Jade: "We could hardcode it."  
+> Parth: "Great! You got this, Jade!", he said, in an attempt to usurp Jade's moral-support role.
 
 There were still a few kinks to iron out when the two left, but they figured out nice solutions independently and, though they haven't pushed the changes (as of right now), they should have that done soon.
 
