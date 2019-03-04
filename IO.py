@@ -9,11 +9,11 @@ class Movement:
 
     Acceptable syntax:
         Movement(front=True, right=True)
-        not implemented: Movement(False, False, True, False) # left, right, front, back
+        Movement(False, False, True, False) # left, right, front, back
         Movement(np.array([0, 1, 0, 0])) # left, right, front, back
         Movement(np_array=np.array([0, 1, 0, 1]))
 
-    NOT IMPLEMENTED ~ Note: If you want to initialize with a regular array instead of a numpy
+    Note: If you want to initialize with a regular array instead of a numpy
     array, just unpack it. E.g.:
         movement = [False, False, True, False]
         Movement(*movement)
@@ -60,6 +60,18 @@ class Movement:
         return output
 
     def asDirection(self):
+        """Returns a number representing the direction that the
+        movement class is toward, following the convention:
+            7    0    1
+             \   |   /
+
+             6 – 8 – 2
+
+             /   |   \
+            5    4    3
+
+        :returns: the number of the direction representing the class
+        """
         if self.front:
             if self.right:
                 return 1
@@ -108,9 +120,9 @@ class Movement:
                     warnings.warn('Your numpy array does not have the correct shape. Should be (4,).', SyntaxWarning)
                     print("Not accepting the variadic positional argument {}.".format(arg))
 
-        # # ...if the first four are boolean
-        # if all(map(lambda x: type(x) is bool, args[:4])) and len(args) == 4:
-        #     return args[:4]
+        # ...if the first four are boolean
+        if all(map(lambda x: type(x) is bool, args[:4])) and len(args) == 4:
+            return args[:4]
 
         # ...or if any of the parameters are in kwargs
         if 'left' in kwargs:
@@ -138,7 +150,20 @@ class Movement:
         return tuple(map(bool, np_array))
 
     def __repr__(self):
-        return "Left: {}, Right: {}, Front: {}, Back: {}".format(self.left, self.right,self.front, self.back)
+        """Represents the class as a string.
+        """
+        labels = ['left', 'right', 'front', 'back']
+        ourMovement = [ labels[i] for i, val in enumerate([ self.left, self.right, self.front, self.back ]) if val ]
+        if ourMovement:
+            return '-'.join(ourMovement)
+        else:
+            return 'No movement'
+
+    def __eq__(self, other):
+        """Compares two different instances of the class by comparing
+        their numerical representation.
+        """
+        return self.asDirection() == other.asDirection()
 
 class State:
     def __init__(self, distances, velocity):
@@ -158,5 +183,5 @@ class State:
             5    4    3
         """
         self.velocity = np.array(velocity)
-        self.distances = distances
+        self.distances = np.array(distances)
         self.velocity_magnitude = np.linalg.norm(self.velocity)
