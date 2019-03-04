@@ -75,8 +75,12 @@ def buildMLVector(distances, velocity, magnitude):
 	:magnitude: The magnitude of the velocity vector
 	:returns: A numpy array representing the distance, velocity, and velocity magnitude
 	"""
-	distances = distances / np.linalg.norm(distances)
-	velocity = velocity / magnitude
+	if np.linalg.norm(distances) != 0:
+		distances = distances / np.linalg.norm(distances)
+	
+	if magnitude != 0:
+		velocity = velocity / magnitude
+
 	return np.array(list(distances) + list(velocity) + [magnitude])
 
 def teach(state, action, reward):
