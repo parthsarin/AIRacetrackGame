@@ -1,0 +1,2 @@
+class NoMemTable(Exception):
+	pass

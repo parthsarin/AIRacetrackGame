@@ -4,7 +4,7 @@ farthest away. (i.e., very simple!)
 """
 import IO
 
-def process(distances, velocity, NUM_TO_DIR):
+def process(state, NUM_TO_DIR):
     """From a vector of eight distances, return the direction
     that the car should move in by calculating the distance that
     is farthest away.
@@ -17,7 +17,7 @@ def process(distances, velocity, NUM_TO_DIR):
     # Note to self: why would we ever move backwards?
     IGNORE_INDICES = {3, 4, 5} # don't move backwards
 
-    sorted_distances = sorted(enumerate(distances), key=lambda x: x[1])[::-1]
+    sorted_distances = sorted(enumerate(state.distances), key=lambda x: x[1])[::-1]
 
     for direction in sorted_distances:
         if direction[0] in IGNORE_INDICES:

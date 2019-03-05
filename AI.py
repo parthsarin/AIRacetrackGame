@@ -5,26 +5,16 @@ import IO
 
 ### AIs ###
 import AIlongestdistance as ld
+import AIQlearningCtsStateSpace as ql
 
-CURRENT_DECISION_FN = ld.process
+CURRENT_DECISION_FN = ql.process
+CURRENT_TRAIN_FN = ql.train
 
-def runAI(distances, velocity):
+def runAI(state):
     """Interfaces with the selected AI algorithm by sending it
     the input as a vector of eight numbers (distances in the
     eight directions) and returns an instance of the Movement
     class describing what the AI would do.
-
-    :distances: A vector of eight numbers representing the distances
-    to the wall in eight directions.
-
-    CONVENTION:
-        7    0    1
-         \   |   /
-
-         6 – X – 2
-
-         /   |   \
-        5    4    3
 
     :return: An instance of the IO.Movement class that describes where
     the car should move.
@@ -38,5 +28,9 @@ def runAI(distances, velocity):
         5: { 'back': True,'left': True },
         6: { 'left': True },
         7: { 'left': True, 'front': True },
+        8: {}
     }
-    return CURRENT_DECISION_FN(distances, velocity, NUM_TO_DIR)
+    return CURRENT_DECISION_FN(state, NUM_TO_DIR)
+
+def trainAI(state, action, reward):
+    CURRENT_TRAIN_FN(state, action, reward)
