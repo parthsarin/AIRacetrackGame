@@ -50,5 +50,20 @@ def getMinDistanceToBarrier(vision_line, barriers):
 			min_distance = math.min(dist(intersection_point, car_point), min_distance)
 	return min_distance
 
+"""
+Generate 8 45 degree seperated lines
+emanating from p starting at angle initial_angle
+These lines stop when they hit max_x/min_x, or max_y/min_y
 
-def 
+"""
+def generateRadialLines(p, initial_angle, max_x, min_x, max_y, min_y):
+	#Construct bounding box
+	topLine = ((min_x, max_y), (max_x, max_y))
+	botLine = ((min_x, min_y), (max_x, min_y))
+	rightLine = ((max_x, min_y), (max_x, max_y))
+	leftLine = ((min_x, min_y), (min_x, max_y))
+
+	for i in range(8):
+		angle = initial_angle + i * math.pi / 2
+
+
