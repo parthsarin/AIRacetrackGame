@@ -27,7 +27,8 @@ def runAI(state):
         4: { 'back': True },
         5: { 'back': True,'left': True },
         6: { 'left': True },
-        7: { 'left': True, 'front': True }
+        7: { 'left': True, 'front': True },
+        8: {}
     }
     return CURRENT_DECISION_FN(state, NUM_TO_DIR)
 

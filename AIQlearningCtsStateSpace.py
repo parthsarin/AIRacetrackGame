@@ -3,12 +3,14 @@ Methods for an AI that Q-learns how to drive a car.
 """
 from pathlib import Path # for remembering the table
 import numpy as np # for math
+import collections # for storing (state, action) pairs
 import pickle # for storing the table
 import errors
 
 import IO
 
 MEMORY_FILE = 'memory/qlearning.mem'
+QLearningData = collections.namedtuple('QLearningData', ['state', 'action'])
 
 def process(state, NUM_TO_DIR):
 	"""Decides which direction to move based on the current state.
@@ -55,9 +57,9 @@ def approximateValue(state, action):
 		# loop over data points
 		for func_value in table:
 			# only compare the same action
-			if func_value[1] == action:
+			if func_value.action == action:
 				# Build a comparable ML vector
-				func_value_state_vector = buildMLVector(func_value[0].distances, func_value[0].velocity, func_value[0].velocity_magnitude)
+				func_value_state_vector = buildMLVector(func_value.state.distances, func_value.state.velocity, func_value.state.velocity_magnitude)
 				
 				# Distance between the two points
 				distance = np.linalg.norm(state_vector-func_value_state_vector)
@@ -92,7 +94,7 @@ def teach(state, action, reward):
 	:reward: The reward that was recieved.
 	"""
 	table = loadQTable()
-	table[(state, action)] = reward
+	table[QLearningData(state, action)] = reward
 	writeQTable(table)
 
 def loadQTable():

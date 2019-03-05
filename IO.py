@@ -59,7 +59,7 @@ class Movement:
 
         return output
 
-    def asDirection(self):
+    def asNum(self):
         """Returns a number representing the direction that the
         movement class is toward, following the convention:
             7    0    1
@@ -72,27 +72,19 @@ class Movement:
 
         :returns: the number of the direction representing the class
         """
-        if self.front:
-            if self.right:
-                return 1
-            elif self.left:
-                return 7
-            else:
-                return 0
-        elif self.back:
-            if self.right:
-                return 3
-            elif self.left:
-                return 5
-            else:
-                return 4
-        else:
-            if self.right:
-                return 2
-            elif self.left:
-                return 6
-            else: 
-               return 8
+        DIR_TO_NUM = {
+            (False, False, True, False): 0,
+            (False, True, True, False): 1,
+            (False, True, False, False): 2,
+            (False, True, False, True): 3,
+            (False, False, False, True): 4,
+            (True, False, False, True): 5,
+            (True, False, False, False): 6,
+            (True, False, True, False): 7,
+            (False, False, False, False): 8
+        }
+
+        return DIR_TO_NUM[(self.left, self.right, self.front, self.back)]
 
     def _get_params(self, args, kwargs):
         """Parses `args` and `kwargs` for the left, right, front, and back
@@ -155,15 +147,20 @@ class Movement:
         labels = ['left', 'right', 'front', 'back']
         ourMovement = [ labels[i] for i, val in enumerate([ self.left, self.right, self.front, self.back ]) if val ]
         if ourMovement:
-            return '-'.join(ourMovement)
+            return 'IO.Movement: ' + '-'.join(ourMovement)
         else:
-            return 'No movement'
+            return 'IO.Movement: No movement'
 
     def __eq__(self, other):
         """Compares two different instances of the class by comparing
         their numerical representation.
         """
-        return self.asDirection() == other.asDirection()
+        return self.asNum() == other.asNum()
+
+    def __hash__(self):
+        """Returns a unique hash of the movement class.
+        """
+        return self.asNum()
 
 class State:
     def __init__(self, distances, velocity):
@@ -185,3 +182,12 @@ class State:
         self.velocity = np.array(velocity)
         self.distances = np.array(distances)
         self.velocity_magnitude = np.linalg.norm(self.velocity)
+
+    def __repr__(self):
+        """Represents the class as a string.
+        """
+        normed_vel = self.velocity
+        if self.velocity_magnitude != 0:
+            normed_vel /= self.velocity_magnitude
+
+        return 'IO.State: Moving towards {} with speed {}. Distances: {}'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
