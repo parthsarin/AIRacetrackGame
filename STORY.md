@@ -92,8 +92,40 @@ The third problem is that our algorithm learns VERY fast. As soon as it has data
 
 But, all said and done, the algorithm worked(...ish... probably an important note: we are not legally liable for any misleading statements)! Without any data, Jade and Parth wanted the car to default to moving forward. Because of the way Python sorts lists, it went *every direction except forward* before it went forward. It was kinda like pushing a grocery cart at a store: it moved in every direction they didn't want it to move, including backwards, before, after wrestling with it, it finally moved forwards. Well, I say 'wrestling'... it was mostly this:
 > Jade: "We could hardcode it."  
-> Parth: "Great! You got this, Jade!", he said, in an attempt to usurp Jade's moral-support role.
+> Parth: "Great! You got this, Jade!", he said, in an attempt to usurp Jade's moral-support role.  
+> Jade: 🤨
 
-There were still a few kinks to iron out when the two left, but they figured out nice solutions independently and, though they haven't pushed the changes (as of right now), they should have that done soon.
+There were still a few kinks to iron out when the two left, but they figured out nice solutions to many of those kinks and, though they haven't pushed the changes (as of right now), they should have that done soon.
+
+## Monday, March 4
+
+Colin and Antonio had intended to get work done on the Graphics portion of the project after the AI team's rather successful Saturday. But, like, nobody has any time in Week 9 and Colin had other things on his mind including his presentation for PWR... While Parth was enjoying lunch, Colin called him to ask for his input about whether he should wear a *sports coat* with his *polo and jeans*. "The sports coat restricts my movement," Colin complained. Parth was happy with this objection because he, in his old-minded, traditionalistic ways, believes that polos under sports coats are absolutely disgusting. Exhibit A:
+
+<p align="center">
+	<img src="http://s7d4.scene7.com/is/image/BrooksBrothers/MM00101_GREEN?$thumbnails$" />
+</p>
+
+Later that night, Parth came over after Colin texted him that he'd left his plate in Antonio's room. To his horror, Colin was wearing a blue polo with Bobcats-themed athletic shorts. After seeing this picture, though, Parth kind of changed his mind...
+
+<p align="center">
+	<img height="300px" src="https://www.dhresource.com/600x600/f2/albu/g7/M00/CD/85/rBVaSVso65iANgkFAAPOtZebB-U724.jpg" />
+</p>
+
+**Anyways, back to your regularly scheduled...programming 😜.** While Parth was in Antonio's room, Antonio finished writing the `mapCreator.py` file, which allows you to build custom maps and also finished writing most of the `utils.py` file which allows you to do very useful things like compute intersections of lines, etc.
+
+Unfortunately, Antonio was having a lot of trouble working on a branch called `Graphics/Algebra`. The slash in the branch name was causing some issues where git was failing to lock refs and, as a result, Antonio had a lot of unpushed commits when Parth came in. Parth fixed the branch issue by merging into another branch and deleting the older branch. Antonio got back to work, but because of some miscommunication, his changes were never pushed and the last two days of work were lost.
+
+It's alright. He didn't do *thaaat* much. Or, at least, because of Antonio's incredible brainpower, he was able to replicate all of the code (sans comments) within 20 minutes. He also designed a nice, donut-shaped map:
+
+<p align="center">
+	<img height="300px" src="img/donut.png" />
+</p>
+
+At the same time, Colin and Parth got involved in a discussion about the physics of the car they were modeling. They spent a lot of time rehashing equations they'd learned in high school physics. Well, Parth did, at least... let's just blame it on the Texas public school system. After getting his bearings, Colin went to bed.
+
+### A brief aside on Parth's not-so-secret obsession
+If you haven't figured it out by now, Parth **loves** commenting. I think he writes more comments than he does code. Even on tests! Parth treats CS tests like they're PWR essays. In his free time, he'll *read back over the code* that others have written and *add comments to it*! As far as we can tell, he's always been this way. Many of us suspect, though, that he was bitten by a radioactive Supreme Court Justice and now can't stop himself from writing an obscene amount of unnecesary information next to functional code.
+
+Parth definitely wants to turn his codebases into legal documents...
 
 > With <3 by @jpac
