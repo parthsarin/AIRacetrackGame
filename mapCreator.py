@@ -6,6 +6,8 @@ point and reward gates.
 from graphics import * # Here be dragons.
 import pickle
 DEFAULT_MAP_NAME = 'simple'
+MAP_WIDTH = 800
+MAP_HEIGHT = 600
 
 def drawTo(lines, win):
 	"""Draws a line on a window.
@@ -87,7 +89,7 @@ def getRewardLines(win):
 
 if __name__ == '__main__':
 	# Initialize the window to create a map
-	win = GraphWin("Create a map!", 600, 400)
+	win = GraphWin("Create a map!", MAP_WIDTH, MAP_HEIGHT)
 
 	# Get barrier lines until the user presses 'd'
 	barrierLines = getBarrierLines(win)
@@ -100,7 +102,8 @@ if __name__ == '__main__':
 	print("Now the starting position!")
 	start_p = win.getMouse()
 	start = (int(start_p.x), int(start_p.y))
+	shape = (MAP_WIDTH, MAP_HEIGHT)
 
 	# Save the map data
-	map_data = (barrierLines, rewardLines, start)
+	map_data = (barrierLines, rewardLines, start, shape)
 	pickle.dump(map_data, open(DEFAULT_MAP_NAME + ".map", "wb"))
