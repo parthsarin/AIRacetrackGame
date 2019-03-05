@@ -50,6 +50,17 @@ def getMinDistanceToBarrier(vision_line, barriers):
 			min_distance = math.min(dist(intersection_point, car_point), min_distance)
 	return min_distance
 
+def getBoundingIntersection(stub, pot_line1, pot_line2):
+	p1 = get_intersection(stub, pot_line1)
+	if p1:
+		return p1
+	p2 = get_intersection(stub, pot_line2)
+	if p2:
+		return p2
+	raise Exception('finding bounding intersection failed')
+	return None
+
+
 """
 Generate 8 45 degree seperated lines
 emanating from p starting at angle initial_angle
@@ -57,6 +68,8 @@ These lines stop when they hit max_x/min_x, or max_y/min_y
 
 """
 def generateRadialLines(p, initial_angle, max_x, min_x, max_y, min_y):
+	lines = list()
+
 	#Construct bounding box
 	topLine = ((min_x, max_y), (max_x, max_y))
 	botLine = ((min_x, min_y), (max_x, min_y))
@@ -65,5 +78,26 @@ def generateRadialLines(p, initial_angle, max_x, min_x, max_y, min_y):
 
 	for i in range(8):
 		angle = initial_angle + i * math.pi / 2
+		if angle > 2 * math.pi:
+			angle -= 2 * math.pi
+
+		if 0 <= angle <= 2 * math.pi:
+			last_point = getBoundingIntersection(stub, topLine, rightLine)
+		elif math.pi / 2 <= angle <= math.pi:
+			last_point = getBoundingIntersection(stub, botLine, rightLine)
+		elif math.pi <= angle <= 3 * math.pi / 2:
+			last_point = getBoundingIntersection(stub, botLine, leftLine)
+		elif 3 * math.pi / 2 <= angle <= 2 * math.pi:
+			last_point = getBoundingIntersection(stub, topLine, leftLine)
+		else:
+			raise Exception("Angle generated not in normal bounds")
+			return None
+		lines.append((p, last_point))
+
+	return lines
+
+
+
+
 
 
