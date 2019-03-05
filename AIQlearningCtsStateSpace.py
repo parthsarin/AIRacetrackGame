@@ -85,8 +85,8 @@ def buildMLVector(distances, velocity, magnitude):
 
 	return np.array(list(distances) + list(velocity) + [magnitude])
 
-def teach(state, action, reward):
-	"""Teach the AI by adding the reward for a particular (state, action) pair
+def train(state, action, reward):
+	"""Train the AI by adding the reward for a particular (state, action) pair
 	to the table.
 
 	:state: The state from which the action was taken.

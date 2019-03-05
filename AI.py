@@ -8,7 +8,7 @@ import AIlongestdistance as ld
 import AIQlearningCtsStateSpace as ql
 
 CURRENT_DECISION_FN = ql.process
-CURRENT_TEACH_FN = ql.teach
+CURRENT_TRAIN_FN = ql.train
 
 def runAI(state):
     """Interfaces with the selected AI algorithm by sending it
@@ -32,5 +32,5 @@ def runAI(state):
     }
     return CURRENT_DECISION_FN(state, NUM_TO_DIR)
 
-def teachAI(state, action, reward):
-    CURRENT_TEACH_FN(state, action, reward)
+def trainAI(state, action, reward):
+    CURRENT_TRAIN_FN(state, action, reward)
