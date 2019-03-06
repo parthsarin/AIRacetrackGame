@@ -76,7 +76,9 @@ def getRewardLines(win):
 				break
 
 		# Add the line to the internal variable
-		lines.append((p1, p2))
+		p1x, p1y = int(p1.x), int(p1.y)
+		p2x, p2y = int(p2.x), int(p2.y)
+		lines.append(((p1x, p1y), (p2x, p2y)))
 		
 		# Draw the line
 		gline = Line(p1, p2)
