@@ -7,7 +7,7 @@ from graphics import * # Here be dragons.
 import pickle
 import collections
 
-DEFAULT_MAP_NAME = 'simple2'
+DEFAULT_MAP_NAME = 'new'
 MAP_WIDTH = 800
 MAP_HEIGHT = 600
 

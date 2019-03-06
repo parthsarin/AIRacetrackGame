@@ -4,6 +4,12 @@ import utils
 import math
 
 class Map:
+	BARRIER_WIDTH = 5
+	BARRIER_COLOR = 'BLACK'
+	REWARD_GATE_WIDTH = 3
+	REWARD_GATE_COLOR = 'GREEN'
+
+
 	def __init__(self, filename):
 		#allow for filenames with or without .map
 		if filename[-4:] != '.map':
@@ -45,6 +51,11 @@ class Map:
 
 	def drawOnScreen(self, screen):
 		screen.fill(WHITE)
+		for l in self.barriers:
+			pygame.draw.line(screen, BARRIER_COLOR, [l[0][0], l[0][1]], [l[1][0], l[1][1]], BARRIER_WIDTH)
+
+		for l in self.reward_gates:
+			pygame.draw.line(screen, REWARD_GATE_COLOR, [l[0][0], l[0][1]], [l[1][0], l[1][1]], REWARD_GATE_WIDTH)
 
 
 
@@ -127,8 +138,6 @@ class Map:
 
 if __name__ == '__main__':
 	test_map = Map('square-list')
-	for line in test_map.reward_gates:
-		print(utils.dist(line[0], line[1]))
 	print(test_map)
 
 
