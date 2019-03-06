@@ -126,8 +126,10 @@ class Map:
 
 
 if __name__ == '__main__':
-	test_map = Map('donut.map')
-	print(test_map.getDistancesFromPoint(test_map.starting_point, math.pi / 2))
+	test_map = Map('square-list')
+	for line in test_map.reward_gates:
+		print(utils.dist(line[0], line[1]))
+	print(test_map)
 
 
 
