@@ -5,7 +5,7 @@ point and reward gates.
 """
 from graphics import * # Here be dragons.
 import pickle
-DEFAULT_MAP_NAME = 'simple'
+DEFAULT_MAP_NAME = 'simple2'
 MAP_WIDTH = 800
 MAP_HEIGHT = 600
 
