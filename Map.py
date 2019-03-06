@@ -43,6 +43,11 @@ class Map:
 				return True
 		return False
 
+	def drawOnScreen(self, screen):
+		screen.fill(WHITE)
+
+
+
 	def getMinDistanceToBarrier(self, vision_line):
 		min_distance = 100000;
 		car_point = vision_line[0]
@@ -128,5 +133,13 @@ if __name__ == '__main__':
 
 """
 we can weight them by the car's length to get smaller values easily
+There is one way to solve this.
+Involves a change to map structure to construct a list of reward gates
+which must then be ticked off / tracked by the Map class
+This would also preclude multiple cars on 1 map
+or Map would need a list of cars to track...
+for now, just front / back lines into this function?
+
+
 
 """

@@ -5,6 +5,8 @@ point and reward gates.
 """
 from graphics import * # Here be dragons.
 import pickle
+import collections
+
 DEFAULT_MAP_NAME = 'simple2'
 MAP_WIDTH = 800
 MAP_HEIGHT = 600
@@ -59,7 +61,7 @@ def getRewardLines(win):
 
 	:win: The active window
 	"""
-	lines = set()
+	lines = list()
 	p1 = win.getMouse()
 	while(True):
 		p2 = p1
@@ -74,7 +76,7 @@ def getRewardLines(win):
 				break
 
 		# Add the line to the internal variable
-		lines.add((p1, p2))
+		lines.append((p1, p2))
 		
 		# Draw the line
 		gline = Line(p1, p2)
