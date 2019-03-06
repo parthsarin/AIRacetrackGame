@@ -70,7 +70,7 @@ Parth thought about this from a more mathematical background: the car can see th
 
 The two ended up going with Parth's idea. Implementing this in code would require two main components:
 
-1. Maintain and store a dictionary that associates a number, `reward`, to a pair `(state, action)`.
+1. Maintain and store a dictionary that associates a pair `(state, action)` to a number, `reward`.
 2. Approximate the estimated reward at a point you don't have information about based on previous information.
 
 Both of these ideas were informed, roughly, by [Q-learning](https://en.wikipedia.org/wiki/Q-learning). In this case, we have a 'continuous state space' (as opposed to discrete) which makes it more difficult to use traditional Q-learning methods.
@@ -78,7 +78,7 @@ Both of these ideas were informed, roughly, by [Q-learning](https://en.wikipedia
 ### Reinventing the Wheel... Including the part where you're on a hillside and the wheel rolls backwards, crushing you underneath...
 Parth and Jade decided to make their own Q-learning-based algorithm, from scratch. They 'approximated' the value at a point by summing up the values at *all of the other points* and weighting each value by a value inversely proportional to its distance from the current state they were trying to guess a good action for. They weighted the points by ![e^(-pi * (x/10)^2)](https://latex.codecogs.com/gif.latex?\\mathrm{e}^{-\\pi%20\\frac{x^2}{10}}) where ![ex](https://latex.codecogs.com/gif.latex?x) was the distance of the point in the table from the point they were trying to approximate.
 
-The exponential function is a modified normal distribution (or, as Jade likes to say, "it's short and FAAAAT" [pronounced in the most contrived, Southern accent you can imagine]) that is equal to ![0.1](https://latex.codecogs.com/gif.latex?0.1) when ![x=1](https://latex.codecogs.com/gif.latex?x=0) and falls off away from that point.
+The exponential function is a modified normal distribution (or, as Jade likes to say, "it's short and FAAAAT" [pronounced in the most contrived, Southern accent you can imagine]) that is equal to ![1](https://latex.codecogs.com/gif.latex?1) when ![x=1](https://latex.codecogs.com/gif.latex?x=0) and falls off away from that point.
 
 There are a few problems with this... The first red flag is that it doesn't look *anything* like the traditional Q-learning algorithm which is based off the equation:
 
@@ -90,7 +90,7 @@ The second red flag is that if there are, say, 10 entries in the table which hav
 
 The third problem is that our algorithm learns VERY fast. As soon as it has data in its table, it's relying entirely on that in its future judgements. This is generally a bad idea in machine learning, but probably not too difficult to fix in a pinch (maybe they could make their algorithm learn at a rate proportional to the size of the Q-table).
 
-But, all said and done, the algorithm worked(...ish... probably an important note: we are not legally liable for any misleading statements)! Without any data, Jade and Parth wanted the car to default to moving forward. Because of the way Python sorts lists, it went *every direction except forward* before it went forward. It was kinda like pushing a grocery cart at a store: it moved in every direction they didn't want it to move, including backwards, before, after wrestling with it, it finally moved forwards. Well, I say 'wrestling'... it was mostly this:
+But, all said and done, the algorithm worked(...ish...)! Without any data, Jade and Parth wanted the car to default to moving forward. Because of the way Python sorts lists, it went *every direction except forward* before it went forward. It was kinda like pushing a grocery cart at a store: it moved in every direction they didn't want it to move, including backwards, before, after wrestling with it, it finally moved forwards. Well, I say 'wrestling'... it was mostly this:
 > Jade: "We could hardcode it."  
 > Parth: "Great! You got this, Jade!", he said, in an attempt to usurp Jade's moral-support role.  
 > Jade: 🤨
@@ -105,15 +105,15 @@ Colin and Antonio had intended to get work done on the Graphics portion of the p
 	<img src="http://s7d4.scene7.com/is/image/BrooksBrothers/MM00101_GREEN?$thumbnails$" />
 </p>
 
-Later that night, Parth came over after Colin texted him that he'd left his plate in Antonio's room. To his horror, Colin was wearing a blue polo with Bobcats-themed athletic shorts. After seeing this picture, though, Parth kind of changed his mind...
+Later that night, Parth came over after Colin texted him that he'd left his plate in Antonio's room. To his horror, Colin was wearing a blue polo with Bobcats-themed athletic shorts. This led to a long discussion about whether wearing a polo with athletic shorts was acceptable. Parth thought not, but after seeing this picture he kind of changed his mind...
 
 <p align="center">
 	<img height="300px" src="https://www.dhresource.com/600x600/f2/albu/g7/M00/CD/85/rBVaSVso65iANgkFAAPOtZebB-U724.jpg" />
 </p>
 
-**Anyways, back to your regularly scheduled...programming 😜.** While Parth was in Antonio's room, Antonio finished writing the `mapCreator.py` file, which allows you to build custom maps and also finished writing most of the `utils.py` file which allows you to do very useful things like compute intersections of lines, etc.
+**Anyways, back to your regularly scheduled...programming 😜.** While Colin and Parth were goofing off, Antonio had finished writing two files: the `mapCreator.py` file, which allows you to build custom maps, and the `utils.py` file, which allows you to do very useful things like compute intersections of lines, etc.
 
-Unfortunately, Antonio was having a lot of trouble working on a branch called `Graphics/Algebra`. The slash in the branch name was causing some issues where git was failing to lock refs and, as a result, Antonio had a lot of unpushed commits when Parth came in. Parth fixed the branch issue by merging into another branch and deleting the older branch. Antonio got back to work, but because of some miscommunication, his changes were never pushed and the last two days of work were lost.
+Unfortunately, Antonio was having some trouble since, trying to follow Parth's branch schema, he was working on a branch called `Graphics/Algebra`. The slash in the branch name was causing some issues where git was failing to lock refs and, as a result, Antonio had a lot of unpushed commits. Parth fixed the branch issue by merging into another branch and deleting the older branch. Due to some miscommunication, Antonio's changes were never pushed and the last two days of work were lost.
 
 It's alright. He didn't do *thaaat* much. Or, at least, because of Antonio's incredible brainpower, he was able to replicate all of the code (sans comments) within 20 minutes. He also designed a nice, donut-shaped map:
 
@@ -121,11 +121,11 @@ It's alright. He didn't do *thaaat* much. Or, at least, because of Antonio's inc
 	<img height="300px" src="img/donut.png" />
 </p>
 
-At the same time, Colin and Parth got involved in a discussion about the physics of the car they were modeling. They spent a lot of time rehashing equations they'd learned in high school physics. Well, Parth did, at least... let's just blame it on the Texas public school system. After getting his bearings, Colin went to bed.
+(I might have added the car in Photoshop, but it's still pretty cool, okay!)
+
+At the same time, Colin and Parth got involved in a discussion about the physics of the car they were modeling. They spent a lot of time rederiving equations they'd learned in high school physics. Well, Parth did, at least... let's just blame it on the Texas public school system. After getting his bearings, Colin went to bed.
 
 ### A brief aside on Parth's not-so-secret obsession
-If you haven't figured it out by now, Parth **loves** commenting. I think he writes more comments than he does code. Even on tests! Parth treats CS tests like they're PWR essays. In his free time, he'll *read back over the code* that others have written and *add comments to it*! As far as we can tell, he's always been this way. Many of us suspect, though, that he was bitten by a radioactive Supreme Court Justice and now can't stop himself from writing an obscene amount of unnecesary information next to functional code.
-
-Parth definitely wants to turn his codebases into legal documents...
+If you haven't figured it out by now, Parth **loves** commenting. I think he writes more comments than he does code. Even on tests! Parth treats CS tests like they're PWR essays. In his free time, he'll *read back over the code* that others have written and *add comments to it*! As far as we can tell, he's always been this way. Many of us suspect that he was bitten by a radioactive Supreme Court Justice and now can't stop himself from writing an obscene amount of unnecesary information next to functional code. He definitely wants to turn his codebases into legal documents...
 
 > With <3 by @jpac
