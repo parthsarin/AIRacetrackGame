@@ -2,12 +2,17 @@ import pygame
 import pickle
 import utils
 import math
+"""Revision history:
+ (not complete)
+ @Colin changed the globals variable colros to RGB and moved globals to out of the class
+"""
+BARRIER_WIDTH = 5
+BARRIER_COLOR = (0,0,0)
+REWARD_GATE_WIDTH = 3
+REWARD_GATE_COLOR = (0,255,0)
 
 class Map:
-	BARRIER_WIDTH = 5
-	BARRIER_COLOR = 'BLACK'
-	REWARD_GATE_WIDTH = 3
-	REWARD_GATE_COLOR = 'GREEN'
+
 
 
 	def __init__(self, filename):
@@ -50,7 +55,7 @@ class Map:
 		return False
 
 	def drawOnScreen(self, screen):
-		screen.fill(WHITE)
+		#screen.fill(WHITE)
 		for l in self.barriers:
 			pygame.draw.line(screen, BARRIER_COLOR, [l[0][0], l[0][1]], [l[1][0], l[1][1]], BARRIER_WIDTH)
 
