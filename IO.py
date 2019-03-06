@@ -147,9 +147,9 @@ class Movement:
         labels = ['left', 'right', 'front', 'back']
         ourMovement = [ labels[i] for i, val in enumerate([ self.left, self.right, self.front, self.back ]) if val ]
         if ourMovement:
-            return 'IO.Movement: ' + '-'.join(ourMovement)
+            return '<IO.Movement: ' + '-'.join(ourMovement) + '>'
         else:
-            return 'IO.Movement: No movement'
+            return '<IO.Movement: no movement>'
 
     def __eq__(self, other):
         """Compares two different instances of the class by comparing
@@ -190,4 +190,4 @@ class State:
         if self.velocity_magnitude != 0:
             normed_vel /= self.velocity_magnitude
 
-        return 'IO.State: Moving towards {} with speed {}. Distances: {}'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
+        return '<IO.State: Moving towards {} with speed {}. Distances: {}>'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
