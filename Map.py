@@ -15,6 +15,28 @@ class Map:
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
 
+	"""
+	USE THIS FUNCTION for getting distances from car!
+	Given a point p, an angle, a bounding box, and a set of barriers this function
+	generates 8 lines at 45 degree intervals around p 
+	starting at the angle given and will return
+	the distances from p to the closest 
+
+	bounding_box = (max_x, min_x, max_y, min_y)
+	"""
+	def getDistancesFromPoint(self, p, angle):
+		radial_lines = self.generateRadialLines(p, angle)
+		distances = []
+		for line in radial_lines:
+			distances.append(self.getMinDistanceToBarrier(line))
+
+		return distances
+
+	"""
+	USE THIS FUNCTION for identifying if the car's front
+	intersects a reward gate.
+	Returns whether a given line intersect a reward gate.
+	"""
 	def isIntersectingRewardGate(self, line):
 		for reward_line in self.reward_gates:
 			if utils.intersect(line, reward_line):
@@ -89,22 +111,6 @@ class Map:
 			lines.append((p, last_point))
 
 		return lines
-
-	"""
-	Given a point p, an angle, a bounding box, and a set of barriers this function
-	generates 8 lines at 45 degree intervals around p 
-	starting at the angle given and will return
-	the distances from p to the closest 
-
-	bounding_box = (max_x, min_x, max_y, min_y)
-	"""
-	def getDistancesFromPoint(self, p, angle):
-		radial_lines = self.generateRadialLines(p, angle)
-		distances = []
-		for line in radial_lines:
-			distances.append(self.getMinDistanceToBarrier(line))
-
-		return distances
 
 	def __str__(self):
 		s = "Barriers: " + repr(self.barriers) + "\n"
