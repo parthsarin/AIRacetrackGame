@@ -15,12 +15,11 @@ class Map:
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
 
-	def __str__(self):
-		s = "Barriers: " + repr(self.barriers) + "\n"
-		s += "Reward Gates: " + repr(self.reward_gates) + "\n"
-		s += "Starting Point: " + repr(self.starting_point) + "\n"
-		s += "Shape: " + repr(self.shape) + "\n"
-		return s
+	def isIntersectingRewardGate(self, line):
+		for reward_line in self.reward_gates:
+			if utils.intersect(line, reward_line):
+				return True
+		return False
 
 	def getMinDistanceToBarrier(self, vision_line):
 		min_distance = 100000;
@@ -81,8 +80,6 @@ class Map:
 				last_point = self.getBoundingIntersection(stub, botLine, leftLine)
 			elif 3 * math.pi / 2 <= angle <= 2 * math.pi:
 				last_point = self.getBoundingIntersection(stub, botLine, rightLine)
-				# print(botLine)
-				# print(rightLine)
 			else:
 				raise Exception("Angle generated not in normal bounds")
 				return None
@@ -109,6 +106,13 @@ class Map:
 
 		return distances
 
+	def __str__(self):
+		s = "Barriers: " + repr(self.barriers) + "\n"
+		s += "Reward Gates: " + repr(self.reward_gates) + "\n"
+		s += "Starting Point: " + repr(self.starting_point) + "\n"
+		s += "Shape: " + repr(self.shape) + "\n"
+		return s
+
 
 if __name__ == '__main__':
 	test_map = Map('donut.map')
@@ -116,3 +120,7 @@ if __name__ == '__main__':
 
 
 
+"""
+we can weight them by the car's length to get smaller values easily
+
+"""
