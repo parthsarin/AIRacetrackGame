@@ -64,7 +64,7 @@ def approximateValue(state, action, LEARNING_RATE):
 	table = loadQTable()
 
 	# Create random noise
-	random_val = (random.random()*200 - 100) * (1 - LEARNING_RATE) / (len(table)+1)
+	random_val = (random.random()*(2*REWARD_RANGE) - REWARD_RANGE) * (1 - LEARNING_RATE) / (len(table)+1)
 
 	if table:
 		# loop over data points
@@ -122,7 +122,7 @@ def loadQTable():
 		with tablePath.open('rb') as f:
 			return pickle.load(f)
 	else:
-		raise errors.NoMemTable("Please create a q-learning table at memory/qlearning.")
+		raise errors.NoMemTable("Please create a q-learning table at {}.".format(MEMORY_FILE))
 
 def writeQTable(table):
 	"""Write the table to the MEMORY_FILE using pickle.
@@ -135,4 +135,4 @@ def writeQTable(table):
 		with tablePath.open('wb') as f:
 			pickle.dump(table, f)
 	else:
-		raise errors.NoMemTable("Please create a q-learning table at memory/qlearning.") 
+		raise errors.NoMemTable("Please create a q-learning table at {}.".format(MEMORY_FILE))
