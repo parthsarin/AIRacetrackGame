@@ -7,6 +7,7 @@ Revision history:
 @Colin (2/16/19 5:38pm) added a basic shell for a pygame loop
 @Colin (3/5/19 5:38pm) added basic movement (not finished but getting there)
 @Colin (3/5/19 11:40pm) Finished basic movement combined aspects of maps antonio has made into the program. TODO: Make the rectangle visually rotate
+@Parth (3/6/19 12:10pm) Changed 'Movement' to 'Keys'. The reason is that the AI talks in the language of Movements, so I added another wrapper class so it will better interact with graphics
 """
 import os
 import pygame
@@ -92,14 +93,14 @@ def pygame_modules_have_loaded():
 
     return success
 
-def move_car (movement, car, dt) :
+def move_car (keys, car, dt) :
     
-        if movement.front:# moving front
+        if keys.up:# moving front
             if car.velocity.x < 0:
                 car.acceleration = car.brake_deceleration
             else:
                 car.acceleration += 1 * dt
-        elif movement.back: # moving back
+        elif keys.down: # moving back
             if car.velocity.x > 0:
                 car.acceleration = -car.brake_deceleration
             else:
@@ -112,12 +113,12 @@ def move_car (movement, car, dt) :
                     car.acceleration = -car.velocity.x / dt
         car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
         #debug statement
-        #print("Movement.right", movement.right,"  movement.front:", movement.front)
+        #print("keys.right", keys.right,"  keys.front:", keys.front)
 
-        if movement.right or (movement.right and movement.front): # right
+        if keys.right or (keys.right and keys.up): # right
             car.steering -= 30 * dt
             print("test")
-        elif movement.left or (movement.left and movement.front): #left
+        elif keys.left or (keys.left and keys.up): #left
                 car.steering += 30 * dt
         else:
             car.steering = 0 #Here is the problem it resets steering when you press forward and left/right
@@ -142,7 +143,7 @@ if pygame_modules_have_loaded():
     def handle_input():
         # Handles user input
         # packages user input into the movement class
-        # Movement(np.array([0, 1, 0, 0])) # left, right, front, back
+        # Keys(False, True, False, True) # left, right, up, down
 
         pressed = pygame.key.get_pressed()
 
@@ -166,7 +167,7 @@ if pygame_modules_have_loaded():
 
 
 
-        return  IO.Movement(np_array)
+        return  IO.Keys(*map(bool, np_array))
                 
 
     def update(screen, dt, car, map):
@@ -203,11 +204,11 @@ if pygame_modules_have_loaded():
             milliseconds = clock.tick(FRAME_RATE)
             dt = milliseconds / 1000.0
 
-            movement = handle_input()
+            keys = handle_input()
 
-            # print("Movement.right", movement.right,"  movement.front:", movement.front) debug statement
+            # print("keys.right", keys.right,"  keys.front:", keys.front) debug statement
 
-            move_car(movement, test_car, dt)
+            move_car(keys, test_car, dt)
 
             update(game_screen, dt, test_car, map)
 
