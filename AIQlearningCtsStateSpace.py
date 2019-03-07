@@ -64,7 +64,7 @@ def approximateValue(state, action, LEARNING_RATE):
 	table = loadQTable()
 
 	# Create random noise
-	random_val = (random.random()*200 - 100) * (1 - LEARNING_RATE) / (len(table)+1)
+	random_val = (random.random()*(2*REWARD_RANGE) - REWARD_RANGE) * (1 - LEARNING_RATE) / (len(table)+1)
 
 	if table:
 		# loop over data points
