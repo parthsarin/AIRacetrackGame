@@ -3,6 +3,7 @@ Contains classes containing movement features for the car.
 """
 import numpy as np
 import warnings
+import collections
 
 class Movement:
     """Captures movement features for the car.
@@ -147,9 +148,9 @@ class Movement:
         labels = ['left', 'right', 'front', 'back']
         ourMovement = [ labels[i] for i, val in enumerate([ self.left, self.right, self.front, self.back ]) if val ]
         if ourMovement:
-            return 'IO.Movement: ' + '-'.join(ourMovement)
+            return '<IO.Movement: ' + '-'.join(ourMovement) + '>'
         else:
-            return 'IO.Movement: No movement'
+            return '<IO.Movement: no movement>'
 
     def __eq__(self, other):
         """Compares two different instances of the class by comparing
@@ -190,4 +191,89 @@ class State:
         if self.velocity_magnitude != 0:
             normed_vel /= self.velocity_magnitude
 
-        return 'IO.State: Moving towards {} with speed {}. Distances: {}'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
+        return '<IO.State: Moving towards {} with speed {}. Distances: {}>'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
+
+class Keys:
+    """
+    Captures four key movements.
+
+    Syntax:
+        Keys(True, )
+    """
+    def __init__(self, *args, **kwargs):
+        if len(args) == 4 and all(map(lambda x: type(x) is bool, args[:4])):
+            self.left, self.right, self.up, self.down = self._get_args(args)
+            self.space = False
+
+        if len(args) == 5 and all(map(lambda x: type(x) is bool, args[:5])):
+            self.left, self.right, self.up, self.down, self.space = self._get_args(args)
+
+        if {'left', 'right', 'up', 'down'} < set(kwargs.keys()):
+            self.left, self.right, self.up, self.down = self._get_kwargs_without_space(kwargs)
+            self.space = False
+
+        if {'left', 'right', 'up', 'down', 'space'} < set(kwargs.keys()):
+            self.left, self.right, self.up, self.down, self.space = self._get_kwargs_without_space(kwargs)
+
+        if len(args) == 1 and type(args[0]) is type(Movement()):
+            self.left, self.right, self.up, self.down, self.space = self._get_mvmt(args[0])
+
+        try:
+            self.left
+        except NameError:
+            raise ValueError("No valid argument value.")
+
+        # Canceling out
+        if self.left and self.right:
+            self.left = self.right = False
+        if self.up and self.down:
+            self.up = self.down = False
+
+
+    def _get_args(self, args):
+        """Parses the five boolean key presses.
+        """
+        return args[:5]
+
+    def _get_kwargs_without_space(self, kwargs):
+        """Parses four keyword arguments without 'space'.
+        """
+        return ( kwargs['left'], kwargs['right'], kwargs['up'], kwargs['down'] )
+
+    def _get_kwargs_with_space(self, kwargs):
+        """Parses five keyword arguments including 'space'.
+        """
+        return ( kwargs['left'], kwargs['right'], kwargs['up'], kwargs['down'], kwargs['space'] )
+
+    def _get_mvmt(self, mvmt):
+        """Parses an instance of the Movement class.
+        """
+        NUM_TO_DIR = {
+            0: { 'up': True },
+            1: { 'up': True, 'right': True },
+            2: { 'up': True, 'right': True },
+            3: { 'right': True,'down': True },
+            4: { 'down': True },
+            5: { 'down': True,'left': True },
+            6: { 'up': True, 'left': True },
+            7: { 'left': True, 'up': True },
+            8: { 'space': True }
+        }
+
+        for direction, arguments in NUM_TO_DIR.items():
+            d = collections.defaultdict(lambda: False)
+            for k, v in arguments.items():
+                d[k] = v
+            NUM_TO_DIR[direction] = d
+
+        n = mvmt.asNum()
+
+        return ( NUM_TO_DIR[n]['left'], NUM_TO_DIR[n]['right'], NUM_TO_DIR[n]['up'], NUM_TO_DIR[n]['down'], NUM_TO_DIR[n]['space'] )
+
+    def __repr__(self):
+        truthtable = (self.left, self.right, self.up, self.down, self.space)
+        labels = ('left', 'right', 'up', 'down', 'space')
+
+        instanceLabels = [ labels[i] for i in range(5) if truthtable[i] ]
+
+        return '<IO.Keys: ' + ', '.join(instanceLabels) + '>'
