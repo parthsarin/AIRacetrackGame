@@ -3,6 +3,9 @@ import pygame
 from math import tan, radians, degrees, copysign
 from pygame.math import Vector2
 
+CAR_ACCELERATION = 1.5
+CAR_STEERING = 30
+
 
 class Car:
     def __init__(self, x, y, angle=0.0, length=4, max_steering=30, max_acceleration=5.0):
@@ -66,12 +69,12 @@ class Game:
                 if car.velocity.x < 0:
                     car.acceleration = car.brake_deceleration
                 else:
-                    car.acceleration += 1 * dt
+                    car.acceleration += CAR_ACCELERATION * dt
             elif pressed[pygame.K_DOWN]:
                 if car.velocity.x > 0:
                     car.acceleration = -car.brake_deceleration
                 else:
-                    car.acceleration -= 1 * dt
+                    car.acceleration -= CAR_ACCELERATION * dt
             elif pressed[pygame.K_SPACE]:
                 if abs(car.velocity.x) > dt * car.brake_deceleration:
                     car.acceleration = -copysign(car.brake_deceleration, car.velocity.x)
@@ -86,9 +89,9 @@ class Game:
             car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
 
             if pressed[pygame.K_RIGHT]:
-                car.steering -= 30 * dt
+                car.steering -= CAR_STEERING * dt
             elif pressed[pygame.K_LEFT]:
-                car.steering += 30 * dt
+                car.steering += CAR_STEERING * dt
             else:
                 car.steering = 0
             car.steering = max(-car.max_steering, min(car.steering, car.max_steering))
