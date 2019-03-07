@@ -120,9 +120,11 @@ def run_all_tests():
 	for category in all_tests:
 		print(opt_colored(f"Category {category}:", 'blue'))
 		print(opt_colored('-----------------------', 'blue'))
+
 		for test in all_tests[category]:
 			passtable.append(test())
+		
+		print()
 
 	passed = sum(map(int, passtable))
-	print()
 	print(opt_colored(f"Passed {passed} / {len(passtable)} tests.", 'blue'))
