@@ -26,6 +26,9 @@ class Map:
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
 
+	def reward(car):
+
+
 	"""
 	USE THIS FUNCTION for getting distances from car!
 	Given a point p, an angle, a bounding box, and a set of barriers this function
@@ -51,6 +54,12 @@ class Map:
 	def isIntersectingRewardGate(self, line):
 		for reward_line in self.reward_gates:
 			if utils.intersect(line, reward_line):
+				return True
+		return False
+
+	def isIntersectingBarrier(self, line):
+		for barrier in self.barriers:
+			if utils.intersect(line, barrier):
 				return True
 		return False
 
