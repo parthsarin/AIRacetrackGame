@@ -36,7 +36,9 @@ def get_intersection(line1, line2):
     return x, y
 
 def convertToTuple(vector2):
-	return 1
+	x = int(car.position.dot(pygame.Vector2(1, 0)))
+	y = int(car.position.dot(pygame.Vector2(0, 1)))
+	return (x, y)
 
 
 """

@@ -101,9 +101,9 @@ if pygame_modules_have_loaded():
     def main():
         prepare_test()
 
-        map = Map.Map("square-list.map")
+        map = Map.Map("donut.map")
         (x, y) = map.starting_point
-        test_car = Car(x,y)
+        test_car = Car.Car(x,y)
         
         while True:
             for event in pygame.event.get():
