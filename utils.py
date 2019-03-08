@@ -35,6 +35,9 @@ def get_intersection(line1, line2):
     y = det(d, ydiff) / div
     return x, y
 
+def convertToTuple(vector2):
+	return 1
+
 
 """
 vision_line is a line from the edge of the map to the edge of the map

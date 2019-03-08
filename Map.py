@@ -27,6 +27,13 @@ class Map:
 		self.shape = map_data[3]
 
 	def reward(car):
+		x = int(car.position.dot(pygame.Vector2(1, 0)))
+		y = int(car.position.dot(pygame.Vector2(0, 1)))
+		pos = (x, y)
+
+
+		return 1
+
 
 
 	"""
