@@ -25,6 +25,29 @@ class Map:
 		self.reward_gates = map_data[1]
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
+		self.seen_gates = set()
+
+	def getImportantPoints(car):
+		corner_one = car.position
+		angle = car.angle
+		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.length)
+		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.width)
+		corner_three = corner_one + length_vec + width_vec
+		mid = corner_one + length_vec / 2 + width_vec / 2
+		corner_two = corner_one + length_vec / 2
+		corner_four = corner_one + width_vec / 2
+		return (corner_one, corner_two, corner_three, corner_four, mid)
+
+	def distances(car):
+
+		return []
+
+	def reward(car):
+		corner_one, corner_two, corner_three, corner_four, mid = self.getImportantPoints(car)
+
+		return 1
+
+
 
 	"""
 	USE THIS FUNCTION for getting distances from car!
@@ -51,6 +74,12 @@ class Map:
 	def isIntersectingRewardGate(self, line):
 		for reward_line in self.reward_gates:
 			if utils.intersect(line, reward_line):
+				return True
+		return False
+
+	def isIntersectingBarrier(self, line):
+		for barrier in self.barriers:
+			if utils.intersect(line, barrier):
 				return True
 		return False
 
