@@ -64,43 +64,43 @@ class Car:
         self.position += self.velocity.rotate(-self.angle) * dt
         self.angle += degrees(angular_velocity) * dt
 
-    def draw(self):
+    def draw(self, screen):
 
         #pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
 
-        rotated = pygame.transform.rotate(car_image, car.angle)
+        rotated = pygame.transform.rotate(car_image, self.angle)
         rect = rotated.get_rect()
-        self.screen.blit(rotated, car.position * ppu - (rect.width / 2, rect.height / 2))
+        screen.blit(rotated, self.position * ppu - (rect.width / 2, rect.height / 2))
 
 
 
-def move_car (mvmt, car, dt) :
-    
+    def move_car (self, mvmt, dt) :
+        
         if mvmt.front:# moving front
-            if car.velocity.x < 0:
-                car.acceleration = car.brake_deceleration
+            if self.velocity.x < 0:
+                self.acceleration = self.brake_deceleration
             else:
-                car.acceleration += 1 * dt
+                self.acceleration += 1 * dt
         elif mvmt.back: # moving back
-            if car.velocity.x > 0:
-                car.acceleration = -car.brake_deceleration
+            if self.velocity.x > 0:
+                self.acceleration = -self.brake_deceleration
             else:
-                car.acceleration -= 1 * dt
+                self.acceleration -= 1 * dt
         else:
-            if abs(car.velocity.x) > dt * car.free_deceleration:
-                car.acceleration = -copysign(car.free_deceleration, car.velocity.x)
+            if abs(self.velocity.x) > dt * self.free_deceleration:
+                self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
             else:
                 if dt != 0:
-                    car.acceleration = -car.velocity.x / dt
-        car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
-        #debug statement
-        #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
+                    self.acceleration = -self.velocity.x / dt
+        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+    #debug statement
+    #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
 
         if mvmt.right or (mvmt.right and mvmt.front): # right
-            car.steering -= 30 * dt
-            print("test")
+            self.steering -= 30 * dt
+            
         elif mvmt.left or (mvmt.left and mvmt.front): #left
-                car.steering += 30 * dt
+                self.steering += 30 * dt
         else:
-            car.steering = 0 #Here is the problem it resets steering when you press forward and left/right
-        car.steering = max(-car.max_steering, min(car.steering, car.max_steering))
+            self.steering = 0 #Here is the problem it resets steering when you press forward and left/right
+        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
