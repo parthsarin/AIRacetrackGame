@@ -12,6 +12,9 @@ from pygame.math import Vector2
 current_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(current_dir, "car.png")
 
+CAR_ACCELERATION = 1.5
+CAR_STEERING = 30
+CAR_BRAKING = 30
 MAX_VELOCITY = 80
 
 
@@ -44,11 +47,11 @@ class Car:
         self.max_acceleration = max_acceleration
         self.max_steering = max_steering
         self.max_velocity = MAX_VELOCITY
-        self.brake_deceleration = 10
+        self.brake_deceleration = CAR_BRAKING
         self.free_deceleration = 2
 
-        self.acceleration = 0.0
-        self.steering = 0.0
+        self.acceleration = CAR_ACCELERATION
+        self.steering = CAR_STEERING
 
     def update(self, dt):
         self.velocity += (self.acceleration * dt, 0)
@@ -69,12 +72,12 @@ class Car:
     def draw(self, screen):
 
         #pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
-        ppu = 32
+        ppu = 1
         car_image = pygame.image.load(image_path)
         rotated = pygame.transform.rotate(car_image, self.angle)
         rect = rotated.get_rect()
-        screen.blit(rotated, self.position * ppu - (rect.width / 2, rect.height / 2))
-
+        #print("rect.width", rect.width, "  rect.height", rect.height, "  Final ", self.position * ppu - (rect.width / 2, rect.height / 2))
+        screen.blit(rotated, self.position* ppu - (rect.width / 2, rect.height / 2))
 
 
     def move_car (self, mvmt, dt) :
@@ -96,13 +99,15 @@ class Car:
                 if dt != 0:
                     self.acceleration = -self.velocity.x / dt
         self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+
+        self.update(dt)
     #debug statement
     #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
 
-        if mvmt.right or (mvmt.right and mvmt.front): # right
+        if mvmt.right: #or (mvmt.right and mvmt.front): # right
             self.steering -= 30 * dt
             
-        elif mvmt.left or (mvmt.left and mvmt.front): #left
+        elif mvmt.left: #or (mvmt.left and mvmt.front): #left
                 self.steering += 30 * dt
         else:
             self.steering = 0 #Here is the problem it resets steering when you press forward and left/right
