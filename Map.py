@@ -32,13 +32,18 @@ class Map:
 		angle = car.angle
 		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.length)
 		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.width)
-		corner_two = corner_one + length_vec + width_vec
-		mid = corner_two = corner_one + length_vec / 2 + width_vec / 2
-		return (corner_one, mid, corner_two)
+		corner_three = corner_one + length_vec + width_vec
+		mid = corner_one + length_vec / 2 + width_vec / 2
+		corner_two = corner_one + length_vec / 2
+		corner_four = corner_one + width_vec / 2
+		return (corner_one, corner_two, corner_three, corner_four, mid)
+
+	def distances(car):
+
+		return []
 
 	def reward(car):
-		corner_one, mid, corner_two = self.getImportantPoints(car)
-
+		corner_one, corner_two, corner_three, corner_four, mid = self.getImportantPoints(car)
 
 		return 1
 
