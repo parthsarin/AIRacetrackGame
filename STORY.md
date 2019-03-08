@@ -128,4 +128,22 @@ At the same time, Colin and Parth got involved in a discussion about the physics
 ### A brief aside on Parth's not-so-secret obsession
 If you haven't figured it out by now, Parth **loves** commenting. I think he writes more comments than he does code. Even on tests! Parth treats CS tests like they're PWR essays. In his free time, he'll *read back over the code* that others have written and *add comments to it*! As far as we can tell, he's always been this way. Many of us suspect that he was bitten by a radioactive Supreme Court Justice and now can't stop himself from writing an obscene amount of unnecesary information next to functional code. He definitely wants to turn his codebases into legal documents...
 
+## Thursday, March 7
+Alright, it's been a while, so let me get you up to speed:
+
+1. On Tuesday, Antonio wrote a function that returns the distances to the eight points that the car is allowed to see in. Antonio and Colin found some nice template code for driving a car, and after that, Colin got the car moving! (Well, sort of... he didn't know the parameters for `pygame.draw` and ended up drawing a rectangle that, instead of just moving forward, also changed in size...)
+2. On Tuesday, Jade and Parth added an element of randomness to their Q-learning algorithm so it learns more slowly.
+3. On Wednesday, Colin had finished making the car move correctly. He hadn't implemented rotation yet, so the car behaved a little strangely, but it was looking pretty good!
+4. Wednesday night, Parth made his own testing suite for the project so the team could easily write and run tests on their AI. He giddily barged into Antonio and Colin's room at 1am while they were getting ready for bed and insisted on showing it to them. It's not bad... but like... also not very useful for the Graphics team...
+<p align="center">
+	<img width="600px" src="img/testing.png" />
+</p>
+He spent an obscene amount of time trying to get the colors to display correctly...
+5. On Thursday, Parth and Jade redesigned their algorithm so the AI didn't have to loop over **every single data point** every time it made a decision; they decided to rescale the distance and velocity vectors so that each of the entries in the distance vector was a number from 0 to 11 and each of the entries in the velocity vector was a number from 0 to 10. The two vectors together give a vector with 10 entries. All of the possible distance/velocities (i.e. all of the possible **states**) can be represented as an 11 x 11 x ... x 11 x 10 x 10 table! Then, there are 8 possible actions. So, all possible `(state, action)` pairs live in a 11 x 11 x ... x 11 x 10 x 10 x 8 table. This kind of structure, in this context, is usually called a **q-table**. Parth and Jade wanted to implement this in the following way:
+	1. Initialize the table with all entries equal to zero.
+	2. Whenever the algorithm performs `action` from a particular `state`, update the value of the table at `(state, action)` based on the reward that the algorithm recieved from performing that action.
+	3. Update *all of the neighbors* of that point in the table! This step is important so the algorithm is learning in a "continuous" rather than "discrete" way.
+	4. To predict the value of the reward for `(state, action)`, just pull the number out of the q-table.
+6. That same day, Antonio started to write a function to train the AI and Colin got rotation down...sort of... Currently, if you rotate it for more than 3 seconds, it spins into a black hole of death (I estimate its rotational velocity at around 25mph).
+
 > With <3 by @jpac
