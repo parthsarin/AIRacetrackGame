@@ -21,20 +21,10 @@ from pygame.locals import *
 from math import tan, radians, degrees, copysign
 from pygame.math import Vector2
 
-
-
-
 FRAME_RATE = 60.0
 SCREEN_SIZE = (800, 600)
 degree = 0
 blue = (0,0,255)
-
-
-
-
-
-
-
 
 
 def pygame_modules_have_loaded():
@@ -48,37 +38,6 @@ def pygame_modules_have_loaded():
         success = False
 
     return success
-
-def move_car (mvmt, car, dt) :
-    
-        if mvmt.front:# moving front
-            if car.velocity.x < 0:
-                car.acceleration = car.brake_deceleration
-            else:
-                car.acceleration += 1 * dt
-        elif mvmt.back: # moving back
-            if car.velocity.x > 0:
-                car.acceleration = -car.brake_deceleration
-            else:
-                car.acceleration -= 1 * dt
-        else:
-            if abs(car.velocity.x) > dt * car.free_deceleration:
-                car.acceleration = -copysign(car.free_deceleration, car.velocity.x)
-            else:
-                if dt != 0:
-                    car.acceleration = -car.velocity.x / dt
-        car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
-        #debug statement
-        #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
-
-        if mvmt.right or (mvmt.right and mvmt.front): # right
-            car.steering -= 30 * dt
-            print("test")
-        elif mvmt.left or (mvmt.left and mvmt.front): #left
-                car.steering += 30 * dt
-        else:
-            car.steering = 0 #Here is the problem it resets steering when you press forward and left/right
-        car.steering = max(-car.max_steering, min(car.steering, car.max_steering))    
        
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -106,7 +65,6 @@ if pygame_modules_have_loaded():
         np_array = np.zeros(4)
 
         if pressed[pygame.K_UP]:
-            
             np_array[2] = 1
                 
         if pressed[pygame.K_DOWN]:
@@ -121,12 +79,10 @@ if pygame_modules_have_loaded():
         #if pressed[pygame.K_UP] and pressed[pygame.K_RIGHT]: # for testing turning
         #    print("Both!Both!")
 
-
-
         return  IO.Movement(np_array)
                 
 
-    def update(screen, dt, car, map):
+    def update(screen, dt, movement, car, map):
         # Add in code to be run during each update cycle.
         # screen provides the PyGame Surface for the game window.
         # time provides the seconds elapsed since the last update.
@@ -161,12 +117,7 @@ if pygame_modules_have_loaded():
             dt = milliseconds / 1000.0
 
             movement = handle_input()
-
-            # print("keys.right", keys.right,"  keys.front:", keys.front) debug statement
-
-            move_car(movement, test_car, dt)
-
-            update(game_screen, dt, test_car, map)
+            update(game_screen, dt, movement, test_car, map)
 
             sleep_time = (1000.0 / FRAME_RATE) - milliseconds
             if sleep_time > 0.0:
