@@ -41,6 +41,13 @@ class Map:
 		corner_four = corner_one + width_vec / 2
 		return (corner_one, corner_two, corner_three, corner_four, mid)
 
+
+	"""
+	USE THIS FUNCTION for getting distances from car!
+	This function generates 8 lines at 45 degree intervals around
+	the car starting at the car's angle given and will return
+	the distances from the car to the cloest barriers
+	"""
 	def distances(car):
 		points = self.getImportantPoints(car)
 		map(convertToTuple, points)
@@ -48,6 +55,9 @@ class Map:
 
 		return self.getDistancesFromPoint(mid, car.angle)
 
+	"""
+	This function will 
+	"""
 	def reward(car):
 		points = self.getImportantPoints(car)
 		map(convertToTuple, points)
@@ -61,24 +71,12 @@ class Map:
 		reward = 0
 		for line in car_lines:
 			if isIntersectingBarrier:
-				return -100
-			if isIntersectingRewardGate:
-				reward = 100
-
+				return BARRIER_REWARD
+			if reward != GATE_REWARD and isIntersectingRewardGate:
+				reward = GATE_REWARD
 
 		return reward
 
-
-
-	"""
-	USE THIS FUNCTION for getting distances from car!
-	Given a point p, an angle, a bounding box, and a set of barriers this function
-	generates 8 lines at 45 degree intervals around p 
-	starting at the angle given and will return
-	the distances from p to the closest 
-
-	bounding_box = (max_x, min_x, max_y, min_y)
-	"""
 	def getDistancesFromPoint(self, p, angle):
 		radial_lines = self.generateRadialLines(p, angle)
 		distances = []
@@ -87,11 +85,6 @@ class Map:
 
 		return distances
 
-	"""
-	USE THIS FUNCTION for identifying if the car's front
-	intersects a reward gate.
-	Returns whether a given line intersect a reward gate.
-	"""
 	def isIntersectingRewardGate(self, line):
 		for reward_line in self.reward_gates - self.seen_gates:
 			if utils.intersect(line, reward_line):
