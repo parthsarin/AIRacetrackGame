@@ -89,8 +89,8 @@ if pygame_modules_have_loaded():
        
         screen.fill((255,255,255))
         map.drawOnScreen(game_screen)
-        car.update(dt)
-        car.draw()
+        car.move(movement, dt)
+        car.draw(screen)
 
         #show the screen surface
         pygame.display.flip()
