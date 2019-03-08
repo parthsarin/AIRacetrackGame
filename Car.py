@@ -66,15 +66,11 @@ class Car:
 
     def draw(self):
 
-        pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
-        
+        #pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
+
         rotated = pygame.transform.rotate(car_image, car.angle)
         rect = rotated.get_rect()
         self.screen.blit(rotated, car.position * ppu - (rect.width / 2, rect.height / 2))
-
-
-
-
 
 
 
@@ -101,7 +97,7 @@ def move_car (mvmt, car, dt) :
         #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
 
         if mvmt.right or (mvmt.right and mvmt.front): # right
-            car.steering -= 30 * dt`
+            car.steering -= 30 * dt
             print("test")
         elif mvmt.left or (mvmt.left and mvmt.front): #left
                 car.steering += 30 * dt
