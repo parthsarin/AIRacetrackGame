@@ -28,12 +28,13 @@ class Map:
 		self.seen_gates = set()
 
 	def reward(car):
-		p = utils.convertToTuple(car.position)
+		corner_one = utils.convertToTuple(car.position)
 		angle = car.angle
-		
-
-
-
+		length = car.length
+		width = car.width
+		corner_two = (corner_one[0] + math.cos(angle) * width + math.sin(angle) * height,
+		              corner_one[1] + math.sin(angle) * width + math.cos(angle) * height )
+		mid = ((corner_one[0] + corner_two[0]) / 2, (corner_one[1] + corner_two[1]) / 2)
 		return 1
 
 

@@ -89,7 +89,7 @@ if pygame_modules_have_loaded():
        
         screen.fill((255,255,255))
         map.drawOnScreen(game_screen)
-        car.move_car(movement, car, dt)
+        car.move_car(movement, dt)
         car.draw(screen)
         # car.move(movement, dt)
         # car.draw(screen)
