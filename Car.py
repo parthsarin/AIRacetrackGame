@@ -9,7 +9,9 @@ from pygame.locals import *
 from math import tan, radians, degrees, copysign
 from pygame.math import Vector2
 
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
+image_path = os.path.join(current_dir, "car.png")
+car_image = pygame.image.load(image_path)
 
 
 FRAME_RATE = 60.0
@@ -65,6 +67,10 @@ class Car:
     def draw(self):
 
         pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
+        
+        rotated = pygame.transform.rotate(car_image, car.angle)
+        rect = rotated.get_rect()
+        self.screen.blit(rotated, car.position * ppu - (rect.width / 2, rect.height / 2))
 
 
 
