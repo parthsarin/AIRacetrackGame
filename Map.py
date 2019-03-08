@@ -27,14 +27,19 @@ class Map:
 		self.shape = map_data[3]
 		self.seen_gates = set()
 
-	def reward(car):
-		corner_one = utils.convertToTuple(car.position)
+	def getImportantPoints(car):
+		corner_one = car.position
 		angle = car.angle
-		length = car.length
-		width = car.width
-		corner_two = (corner_one[0] + math.cos(angle) * width + math.sin(angle) * height,
-		              corner_one[1] + math.sin(angle) * width + math.cos(angle) * height )
-		mid = ((corner_one[0] + corner_two[0]) / 2, (corner_one[1] + corner_two[1]) / 2)
+		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.length)
+		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.width)
+		corner_two = corner_one + length_vec + width_vec
+		mid = corner_two = corner_one + length_vec / 2 + width_vec / 2
+		return (corner_one, mid, corner_two)
+
+	def reward(car):
+		corner_one, mid, corner_two = self.getImportantPoints(car)
+
+
 		return 1
 
 
