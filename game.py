@@ -6,6 +6,7 @@ from pygame.math import Vector2
 CAR_ACCELERATION = 1.5
 CAR_STEERING = 30
 CAR_BRAKING = 30
+MAX_VELOCITY = 80
 
 
 class Car:
@@ -16,7 +17,7 @@ class Car:
         self.length = length
         self.max_acceleration = max_acceleration
         self.max_steering = max_steering
-        self.max_velocity = 20
+        self.max_velocity = MAX_VELOCITY
         self.brake_deceleration = CAR_BRAKING
         self.free_deceleration = 2
 

@@ -11,7 +11,8 @@ from pygame.math import Vector2
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(current_dir, "car.png")
-car_image = pygame.image.load(image_path)
+
+MAX_VELOCITY = 80
 
 
 FRAME_RATE = 60.0
@@ -22,6 +23,7 @@ blue = (0,0,255)
 
 
 class Car:
+
     """Initializes CAR class.
         :x the x position.
         :y the y postiion.
@@ -41,7 +43,7 @@ class Car:
         self.width = width
         self.max_acceleration = max_acceleration
         self.max_steering = max_steering
-        self.max_velocity = 30
+        self.max_velocity = MAX_VELOCITY
         self.brake_deceleration = 10
         self.free_deceleration = 2
 
@@ -67,7 +69,8 @@ class Car:
     def draw(self, screen):
 
         #pygame.draw.rect(game_screen,blue,pygame.Rect((self.position[0],self.position[1]),(self.width, self.length)))
-
+        ppu = 32
+        car_image = pygame.image.load(image_path)
         rotated = pygame.transform.rotate(car_image, self.angle)
         rect = rotated.get_rect()
         screen.blit(rotated, self.position * ppu - (rect.width / 2, rect.height / 2))
