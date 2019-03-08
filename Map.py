@@ -10,6 +10,9 @@ BARRIER_WIDTH = 5
 BARRIER_COLOR = (0,0,0)
 REWARD_GATE_WIDTH = 3
 REWARD_GATE_COLOR = (0,255,0)
+BARRIER_REWARD = -100
+GATE_REWARD = 100
+SEEN_GATES = True
 
 class Map:
 
@@ -39,13 +42,31 @@ class Map:
 		return (corner_one, corner_two, corner_three, corner_four, mid)
 
 	def distances(car):
+		points = self.getImportantPoints(car)
+		map(convertToTuple, points)
+		corner_one, corner_two, corner_three, corner_four, mid = points
 
-		return []
+		return self.getDistancesFromPoint(mid, car.angle)
 
 	def reward(car):
-		corner_one, corner_two, corner_three, corner_four, mid = self.getImportantPoints(car)
+		points = self.getImportantPoints(car)
+		map(convertToTuple, points)
+		corner_one, corner_two, corner_three, corner_four, mid = points
 
-		return 1
+		left = (corner_one, corner_two)
+		front = (corner_two, corner_three)
+		right = (corner_three, corner_four)
+		back = (corner_four, corner_one)
+		car_lines = [left, front, right, back]
+		reward = 0
+		for line in car_lines:
+			if isIntersectingBarrier:
+				return -100
+			if isIntersectingRewardGate:
+				reward = 100
+
+
+		return reward
 
 
 
@@ -72,8 +93,10 @@ class Map:
 	Returns whether a given line intersect a reward gate.
 	"""
 	def isIntersectingRewardGate(self, line):
-		for reward_line in self.reward_gates:
+		for reward_line in self.reward_gates - self.seen_gates:
 			if utils.intersect(line, reward_line):
+				if SEEN_GATES:
+					seen_gates.add(reward_line)
 				return True
 		return False
 
