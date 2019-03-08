@@ -1,5 +1,4 @@
 import IO
-import error
 import bisect
 import racetrack
 import Car
@@ -25,20 +24,20 @@ class QLState:
 		self.velocity = np.array([ bisect.bisect(self._velocity_buckets, vel)-1 for vel in state.velocity ])
 	
 	def asNPArray(self, dist=True, vel=True):
-		output = np.array()
+		output = np.array([])
 
 		if dist:
-			output += self.distances
+			output = np.array(list(output) + list(self.distances))
 
 		if vel:
-			output += self.velocity
+			output = np.array(list(output) + list(self.velocity))
 
 		return output
 
 def initArray():
 	num_actions = len(IO.Movement.DIR_TO_NUM)
 	num_distances = IO.State.NUM_DISTANCES
-	num_vels = IO.State.NUM_VELS
+	num_vels = IO.State.NUM_VEL
 
 	return np.zeros( (QLState.DIST_NUM_SMALLER_BUCKETS+1,)*num_distances + (QLState.VEL_NUM_BUCKETS,)*num_vels + (num_actions,) )
 
@@ -48,6 +47,6 @@ def isCorrectQLArray(candidate_arr):
 
 	num_actions = len(IO.Movement.DIR_TO_NUM)
 	num_distances = IO.State.NUM_DISTANCES
-	num_vels = IO.State.NUM_VELS
+	num_vels = IO.State.NUM_VEL
 
 	return candidate_arr.shape == (QLState.DIST_NUM_SMALLER_BUCKETS+1,)*num_distances + (QLState.VEL_NUM_BUCKETS,)*num_vels + (num_actions,)
