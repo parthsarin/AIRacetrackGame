@@ -51,6 +51,19 @@ def AITest1():
 	MIBPenFlashyFlash() # be sure to do this so that the AI doesn't end up confused with previous data
 	return outcome
 
+@run_test("The AI learns to move forward if it's next to a point that it knows to move forward from.", category="AI", silence=True)
+def AITest2():
+	startingState = IO.State([10, 8, 6, 8, 10, 8, 6, 8], [0,0])
+	front = IO.Movement(front=True)
+
+	for i in range(10):
+		AI.trainAI(startingState, front, 100) # moving forward is, like, really cool!
+
+	shiftedStartingState = IO.State([10, 9, 7, 9, 10, 7, 5, 7], [0,0]) # shifted to the left
+	outcome = (AI.runAI(shiftedStartingState) == front)
+	MIBPenFlashyFlash()
+	return outcome
+
 """
 Graphics Tests (...do these exist...?)
 """
