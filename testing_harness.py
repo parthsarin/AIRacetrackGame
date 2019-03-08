@@ -3,13 +3,66 @@ TESTING HARNESS (don't change, please!)
 """
 import errors
 import sys
-from termcolor import colored
 import collections
+import pip
 
-_all_tests = collections.defaultdict(list) # God I hope nobody uses this name...
-
+"""
+Silence output
+"""
 class DummyFile(object):
     def write(self, x): pass
+
+"""
+A lot of stuff having to do with colors
+"""
+def supports_color():
+    """
+    Returns True if the running system's terminal supports color, and False
+    otherwise.
+    """
+    plat = sys.platform
+    supported_platform = plat != 'Pocket PC' and (plat != 'win32' or 'ANSICON' in os.environ)
+    # isatty is not always implemented, #6223.
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
+
+colors = {
+    'header': '\033[95m',
+    'blue': '\033[94m',
+    'green': '\033[92m',
+    'yellow': '\033[93m',
+    'red': '\033[91m',
+    'end': '\033[0m',
+    'bold': '\033[1m',
+    'underline': '\033[4m'
+}
+
+# Colorize things at all?
+colorized = supports_color()
+
+# Use termcolor?
+try:
+	from termcolor import colored
+	use_termcolor = True
+except ModuleNotFoundError:
+	use_termcolor = False
+
+def opt_colored(x, color):
+	if colorized:
+		if use_termcolor:
+			return colored(x, color)
+		else:
+			return colors[color] + x + colors['end']
+	else:
+		return x
+
+"""
+The actual testing harness
+"""
+# Yes, I know, globals are terrible, but... we need this one
+_all_tests = collections.defaultdict(list) # God I hope nobody uses this name...
 
 def run_test(name, category='default', silence=False):
 	"""
@@ -39,9 +92,9 @@ def run_test(name, category='default', silence=False):
 				raise KeyboardInterrupt
 
 			except Exception as e:
-				print(colored('FAIL: {}'.format(name), 'red'))
-				print(colored("The test raised the following exception:", 'red'))
-				print(colored(str(e), 'green'))
+				print(opt_colored('FAIL: {}'.format(name), 'red'))
+				print(opt_colored("The test raised the following exception:", 'red'))
+				print(opt_colored(str(e), 'green'))
 
 			# Make sure that the output is boolean
 			if type(output) != bool:
@@ -49,9 +102,9 @@ def run_test(name, category='default', silence=False):
 
 			# Did it pass the test?
 			if output:
-				print(colored('PASS: {}'.format(name), 'green'))
+				print(opt_colored('PASS: {}'.format(name), 'green'))
 			else:
-				print(colored('FAIL: {}'.format(name), 'red'))
+				print(opt_colored('FAIL: {}'.format(name), 'red'))
 
 			return output
 
@@ -65,11 +118,13 @@ def run_all_tests():
 
 	all_tests = collections.OrderedDict(_all_tests)
 	for category in all_tests:
-		print(colored(f"Category {category}:", 'blue'))
-		print(colored('-----------------------', 'blue'))
+		print(opt_colored(f"Category {category}:", 'blue'))
+		print(opt_colored('-----------------------', 'blue'))
+
 		for test in all_tests[category]:
 			passtable.append(test())
+		
+		print()
 
 	passed = sum(map(int, passtable))
-	print()
-	print(colored(f"Passed {passed} / {len(passtable)} tests.", 'blue'))
+	print(opt_colored(f"Passed {passed} / {len(passtable)} tests.", 'blue'))

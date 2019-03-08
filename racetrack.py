@@ -93,14 +93,14 @@ def pygame_modules_have_loaded():
 
     return success
 
-def move_car (keys, car, dt) :
+def move_car (mvmt, car, dt) :
     
-        if keys.up:# moving front
+        if mvmt.front:# moving front
             if car.velocity.x < 0:
                 car.acceleration = car.brake_deceleration
             else:
                 car.acceleration += 1 * dt
-        elif keys.down: # moving back
+        elif mvmt.back: # moving back
             if car.velocity.x > 0:
                 car.acceleration = -car.brake_deceleration
             else:
@@ -113,12 +113,12 @@ def move_car (keys, car, dt) :
                     car.acceleration = -car.velocity.x / dt
         car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
         #debug statement
-        #print("keys.right", keys.right,"  keys.front:", keys.front)
+        #print("mvmt.right", mvmt.right,"  mvmt.front:", mvmt.front)
 
-        if keys.right or (keys.right and keys.up): # right
+        if mvmt.right or (mvmt.right and mvmt.front): # right
             car.steering -= 30 * dt
             print("test")
-        elif keys.left or (keys.left and keys.up): #left
+        elif mvmt.left or (mvmt.left and mvmt.front): #left
                 car.steering += 30 * dt
         else:
             car.steering = 0 #Here is the problem it resets steering when you press forward and left/right
@@ -167,7 +167,7 @@ if pygame_modules_have_loaded():
 
 
 
-        return  IO.Keys(*map(bool, np_array))
+        return  IO.Movement(np_array)
                 
 
     def update(screen, dt, car, map):
@@ -204,11 +204,11 @@ if pygame_modules_have_loaded():
             milliseconds = clock.tick(FRAME_RATE)
             dt = milliseconds / 1000.0
 
-            keys = handle_input()
+            movement = handle_input()
 
             # print("keys.right", keys.right,"  keys.front:", keys.front) debug statement
 
-            move_car(keys, test_car, dt)
+            move_car(movement, test_car, dt)
 
             update(game_screen, dt, test_car, map)
 
