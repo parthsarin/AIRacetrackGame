@@ -25,11 +25,13 @@ class Map:
 		self.reward_gates = map_data[1]
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
+		self.seen_gates = set()
 
 	def reward(car):
 		p = utils.convertToTuple(car.position)
 		angle = car.angle
 		
+
 
 
 		return 1

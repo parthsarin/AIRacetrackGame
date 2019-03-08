@@ -89,8 +89,10 @@ if pygame_modules_have_loaded():
        
         screen.fill((255,255,255))
         map.drawOnScreen(game_screen)
-        car.move(movement, dt)
+        car.move_car(movement, car, dt)
         car.draw(screen)
+        # car.move(movement, dt)
+        # car.draw(screen)
 
         #show the screen surface
         pygame.display.flip()
@@ -101,7 +103,7 @@ if pygame_modules_have_loaded():
     def main():
         prepare_test()
 
-        map = Map.Map("donut.map")
+        map = Map.Map("square-list.map")
         (x, y) = map.starting_point
         test_car = Car.Car(x,y)
         
