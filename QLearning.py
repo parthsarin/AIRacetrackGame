@@ -1,9 +1,11 @@
-import IO
-import bisect
-import racetrack
-import Car
-import numpy as np
-import collections
+import IO # for processing state and movement
+import bisect # for identifying which bucket values fall into
+import contextlib # for silencing racetrack... YES IT BOTHERS ME THAT MUCH, OKAY
+with contextlib.redirect_stdout(None):
+    import racetrack # sadly, this is just for a single value
+import Car # for the car's max velocity
+import numpy as np # for everything math-y
+import collections # for storing the q-table as a defaultdict
 
 class QLState:
 	DIST_MAX_BUCKET_RATIO = 2/3

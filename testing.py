@@ -38,7 +38,7 @@ def MIBPenFlashyFlash():
 	"""
 	debug.resetQLearningMem()
 
-@run_test("The AI learns to move forward if it gets rewards for doing so.", category="AI")
+@run_test("The AI learns to move forward if it gets rewards for doing so.", category="AI", silence=True)
 def AITest1():
 	startingState = IO.State([10, 8, 6, 8, 10, 8, 6, 8], [0,0])
 	front = IO.Movement(front=True)
@@ -51,7 +51,7 @@ def AITest1():
 	MIBPenFlashyFlash() # be sure to do this so that the AI doesn't end up confused with previous data
 	return outcome
 
-@run_test("The AI learns to move forward if it's next to a point that it knows to move forward from.", category="AI")
+@run_test("The AI learns to move forward if it's next to a point that it knows to move forward from.", category="AI", silence=True)
 def AITest2():
 	startingState = IO.State([10, 8, 6, 8, 10, 8, 6, 8], [0,0])
 	front = IO.Movement(front=True)
