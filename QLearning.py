@@ -3,6 +3,7 @@ import bisect
 import racetrack
 import Car
 import numpy as np
+import collections
 
 class QLState:
 	DIST_MAX_BUCKET_RATIO = 2/3
@@ -34,19 +35,11 @@ class QLState:
 
 		return output
 
+	def __repr__(self):
+		return "<QLState: distances: {}; velocity: {}>".format(str(list(self.distances)), str(list(self.velocity)))
+
+	def __hash__(self):
+		return hash(str(self.asNPArray))
+
 def initArray():
-	num_actions = len(IO.Movement.DIR_TO_NUM)
-	num_distances = IO.State.NUM_DISTANCES
-	num_vels = IO.State.NUM_VEL
-
-	return np.zeros( (QLState.DIST_NUM_SMALLER_BUCKETS+1,)*num_distances + (QLState.VEL_NUM_BUCKETS,)*num_vels + (num_actions,) )
-
-def isCorrectQLArray(candidate_arr):
-	if type(candidate_arr) != np.ndarray:
-		return False
-
-	num_actions = len(IO.Movement.DIR_TO_NUM)
-	num_distances = IO.State.NUM_DISTANCES
-	num_vels = IO.State.NUM_VEL
-
-	return candidate_arr.shape == (QLState.DIST_NUM_SMALLER_BUCKETS+1,)*num_distances + (QLState.VEL_NUM_BUCKETS,)*num_vels + (num_actions,)
+	return collections.defaultdict(int)
