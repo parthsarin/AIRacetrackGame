@@ -32,9 +32,9 @@ class Map:
 
 	def getImportantPoints(car):
 		corner_one = car.position
-		angle = car.angle
-		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.length)
-		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.width)
+		angle = car.angle * math.pi / 180 #car.angle is in degrees
+		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.p_length)
+		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.p_width)
 		corner_three = corner_one + length_vec + width_vec
 		mid = corner_one + length_vec / 2 + width_vec / 2
 		corner_two = corner_one + length_vec / 2
@@ -58,7 +58,7 @@ class Map:
 	"""
 	This function will 
 	"""
-	def reward(car):
+	def reward(self, car):
 		points = self.getImportantPoints(car)
 		map(convertToTuple, points)
 		corner_one, corner_two, corner_three, corner_four, mid = points

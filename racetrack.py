@@ -20,6 +20,7 @@ import numpy as np
 from pygame.locals import *
 from math import tan, radians, degrees, copysign
 from pygame.math import Vector2
+import math
 
 FRAME_RATE = 60.0
 SCREEN_SIZE = (800, 600)
@@ -71,7 +72,6 @@ if __name__ == '__main__':
                 np_array[3] = 1
            
             if pressed[pygame.K_RIGHT]:
-                
                 np_array[1] = 1
                 
             if pressed[pygame.K_LEFT]:
@@ -91,8 +91,11 @@ if __name__ == '__main__':
             map.drawOnScreen(game_screen)
             car.move_car(movement, dt)
             car.draw(screen)
-            # car.move(movement, dt)
-            # car.draw(screen)
+            rew = map.reward(car)
+            if rew == 100:
+                print("REWARD GATE REACHED!")
+            elif rew == -100:
+                print("BARRIER BAD")
 
             #show the screen surface
             pygame.display.flip()
@@ -105,7 +108,8 @@ if __name__ == '__main__':
 
             map = Map.Map("square-list.map")
             (x, y) = map.starting_point
-            test_car = Car.Car(x,y)
+            test_car = Car.Car(x,y, angle=90)
+            print(test_car.angle)
             
             while True:
                 for event in pygame.event.get():
