@@ -4,8 +4,8 @@ Interfaces with the AI algorithm.
 import IO
 
 ### AIs ###
-import AIlongestdistance as ld
-import AIQlearningCtsStateSpace as ql
+import AI_longest_distance as ld
+import AI_QLearning as ql
 
 CURRENT_DECISION_FN = ql.process
 CURRENT_TRAIN_FN = ql.train
