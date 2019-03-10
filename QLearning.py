@@ -10,10 +10,10 @@ import collections # for storing the q-table as a defaultdict
 
 # In-house imports
 import IO # for processing state and movement
-import Car # for the car's max velocity
 import contextlib # for silencing racetrack... YES IT BOTHERS ME THAT MUCH, OKAY
 with contextlib.redirect_stdout(None):
     import racetrack # sadly, this is just for a single value
+    import Car # for the car's max velocity
 
 class QLState:
 	DIST_MAX_BUCKET_RATIO = 2/3
