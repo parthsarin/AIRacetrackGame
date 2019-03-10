@@ -16,18 +16,19 @@ MEMORY_FILE = 'memory/qlearning.mem'
 REWARD_RANGE = 100
 DEFAULT_LEARNING_RATE = .465
 
-def process(state, NUM_TO_DIR):
+def process(state, qtable, NUM_TO_DIR):
 	"""Decides which direction to move based on the current state.
 
 	:state: The current state of the game.
 	:type state: IO.State
+	
+	:qtable: The Q-table representing the data that the AI has collected so far.
+	:type qtable: collections.defaultdict
+	
 	:NUM_TO_DIR: A dictionary that translates single-digit directions
 	into a dictionary of booleans containing directional information.
-	:LEARNING_RATE: A number between 0 and 1 that represents how fast
-	the algorithm should learn.
 	"""
 	approximations = {}
-	qtable = loadQTable()
 	qlstate = QLearning.QLState(state)
 
 	# Approximate the value of each action
@@ -41,26 +42,32 @@ def process(state, NUM_TO_DIR):
 	optimalDirection = sorted(approximations.items(), key=lambda x: x[1])[::-1][0]
 	return IO.Movement(**NUM_TO_DIR[optimalDirection[0]])
 
-def train(state, action, reward, LEARNING_RATE = DEFAULT_LEARNING_RATE):
+def train(state, action, reward, qtable, LEARNING_RATE = DEFAULT_LEARNING_RATE):
 	"""Train the AI by adding the reward for a particular (state, action) pair
 	to the table.
 
 	:state: The state from which the action was taken.
 	:type state: IO.State
+	
 	:action: The action that was taken.
 	:type action: IO.Movement
+	
 	:reward: The reward that was recieved.
 	:type reward: float
+	
+	:qtable: The Q-table representing the data that the AI has collected so far.
+	:type qtable: collections.defaultdict
+	
+	:LEARNING_RATE: A number between 0 and 1 that represents how fast the 
+	algorithm should learn.
 	"""
 	qlstate = QLearning.QLState(state) # convert to a QLState
-
-	qtable = loadQTable() # load the Q-table
 	
 	# Update the value
 	key = QTableKey(qlstate, action)
 	qtable[key] = newValue(qlstate, action, reward, qtable, LEARNING_RATE)
 
-	writeQTable(qtable) # write the table to the disk
+	return qtable
 
 def newValue(qlstate, action, known_reward, qtable, LEARNING_RATE):
 	"""Calculates the new value that should replace a value from the Q-table
@@ -68,12 +75,16 @@ def newValue(qlstate, action, known_reward, qtable, LEARNING_RATE):
 
 	:qlstate: The state from which the AI took the action.
 	:type qlstate: QLearning.QLState
+
 	:action: The action the AI took.
 	:type action: IO.Movement
+	
 	:known_reward: The reward the AI recieved.
 	:type known_reward: float
-	:qtable: The Q-table that contains the previously-known 
+	
+	:qtable: The Q-table representing the data that the AI has collected so far.
 	:type qtable: collections.defaultdict
+	
 	:LEARNING_RATE: A number between 0 and 1 that represents how fast
 	the algorithm should learn.
 	:type LEARNING_RATE: float
@@ -89,6 +100,7 @@ def QTableKey(qlstate, action):
 
 	:qlstate: The state that the AI is in.
 	:type qlstate: QLearning.QLState
+	
 	:action: The action the AI takes.
 	:type action: IO.Movement
 	"""

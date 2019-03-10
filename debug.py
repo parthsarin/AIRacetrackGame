@@ -5,7 +5,7 @@ import pickle
 import AI_QLearning
 import QLearning
 
-def resetQLearningMem():
+def resetQLearningMem(player):
 	"""Resets the q-learning table
 	"""
 	blankTable = QLearning.initArray()

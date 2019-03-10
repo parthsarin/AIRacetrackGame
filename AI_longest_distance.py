@@ -4,13 +4,13 @@ farthest away. (i.e., very simple!)
 """
 import IO
 
-def process(state, NUM_TO_DIR):
+def process(state, data, NUM_TO_DIR):
     """From a vector of eight distances, return the direction
     that the car should move in by calculating the distance that
     is farthest away.
 
-    :distances: A vector of eight numbers representing the distances
-    to the wall in eight directions.
+    :state: The current state of the game.
+    :type state: IO.State
     :return: An instance of the IO.Movement class that describes where
     the car should move.
     """
