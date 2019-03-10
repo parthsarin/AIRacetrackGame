@@ -14,12 +14,14 @@ CURRENT_DECISION_FN = ql.process
 CURRENT_TRAIN_FN = ql.train
 CURRENT_DATA = ql.loadQTable()
 CURRENT_SAVE_FN = ql.writeQTable
+DEFAULT_SAVE_PATH = ql.MEMORY_FILE
 
 # Longest distance
 # CURRENT_DECISION_FN = ld.process
 # CURRENT_TRAIN_FN = pass
 # CURRENT_DATA = None
 # CURRENT_SAVE_FN = pass
+# DEFAULT_SAVE_PATH = None
 
 class Driver:
     def __init__(self):
@@ -67,7 +69,7 @@ class Driver:
         """
         self.ai_data = self.train_fn(state, action, reward, self.ai_data)
 
-    def saveAIData(self):
+    def saveAIData(self, path=DEFAULT_SAVE_PATH):
         """Saves the AI data to the disk.
         """
-        self.save_fn(self.ai_data)
+        self.save_fn(self.ai_data, path)

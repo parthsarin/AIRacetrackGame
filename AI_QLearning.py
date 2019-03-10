@@ -106,25 +106,31 @@ def QTableKey(qlstate, action):
 	"""
 	return (tuple(qlstate.distances), tuple(qlstate.velocity), action.asNum())
 
-def loadQTable():
+def loadQTable(path=MEMORY_FILE):
 	"""Load the Q-table from the memory file by depickling it.
+
+	:path: The path to read the table from.
+	:type path: str
 	"""
-	tablePath = Path(MEMORY_FILE)
+	tablePath = Path(path)
 	if tablePath.exists():
 		with tablePath.open('rb') as f:
 			return pickle.load(f)
 	else:
-		raise errors.NoMemTable("Please create a q-learning table at {}.".format(MEMORY_FILE))
+		raise errors.NoMemTable("There is no data at {}.".format(path))
 
-def writeQTable(table):
-	"""Write the table to the MEMORY_FILE using pickle.
+def writeQTable(table, path=MEMORY_FILE):
+	"""Write the table to the path using pickle.
 	Note: This function *rewrites* the table!
 
 	:table: The table to be written to the memory file.
+	:path: The path to write the table to.
+	:type path: str
 	"""
-	tablePath = Path(MEMORY_FILE)
-	if tablePath.exists():
-		with tablePath.open('wb') as f:
-			pickle.dump(table, f)
-	else:
-		raise errors.NoMemTable("Please create a q-learning table at {}.".format(MEMORY_FILE))
+	tablePath = Path(path)
+	
+	if not tablePath.parent.exists():
+		tablePath.mkdir(parents=True)
+
+	with tablePath.open('wb') as f:
+		pickle.dump(table, f)
