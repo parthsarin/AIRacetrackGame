@@ -90,8 +90,20 @@ if __name__ == '__main__':
             screen.fill((255,255,255))
             map.drawOnScreen(game_screen)
             car.move_car(movement, dt)
-            car.draw(screen)
+            car.draw(screen)# corner_three = corner_one + length_vec + width_vec
+        # corner_two = corner_one + length_vec / 2
+        # corner_four = corner_one + width_vec / 2
             rew = map.reward(car)
+            points = map.getImportantPoints(car)
+            corner_one, corner_two, corner_three, corner_four, mid = points
+
+            left = (corner_one, corner_two)
+            front = (corner_two, corner_three)
+            right = (corner_three, corner_four)
+            back = (corner_four, corner_one)
+            car_lines = [left, front, right, back]
+            for l in car_lines:
+                pygame.draw.line(screen, (0, 0, 255), [l[0][0], l[0][1]], [l[1][0], l[1][1]], 5)
             if rew == 100:
                 print("REWARD GATE REACHED!")
             elif rew == -100:
@@ -106,7 +118,7 @@ if __name__ == '__main__':
         def main():
             prepare_test()
 
-            map = Map.Map("square-list.map")
+            map = Map.Map("donut")
             (x, y) = map.starting_point
             test_car = Car.Car(x,y, angle=90)
             print(test_car.angle)

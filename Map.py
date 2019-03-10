@@ -25,20 +25,22 @@ class Map:
 		with open(filename, 'rb') as f:
 			map_data = pickle.load(f)
 		self.barriers = map_data[0]
-		self.reward_gates = map_data[1]
+		self.reward_gates = set(map_data[1])
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
 		self.seen_gates = set()
 
-	def getImportantPoints(car):
-		corner_one = car.position
+	def getImportantPoints(self, car):
+		mid = car.position
 		angle = car.angle * math.pi / 180 #car.angle is in degrees
-		length_vec = Vector2(math.cos(angle), math.sin(angle)).scale_to_length(car.p_length)
-		width_vec = Vector2(math.sin(angle), math.cos(angle)).scale_to_length(car.p_width)
-		corner_three = corner_one + length_vec + width_vec
-		mid = corner_one + length_vec / 2 + width_vec / 2
-		corner_two = corner_one + length_vec / 2
-		corner_four = corner_one + width_vec / 2
+		length_vec = pygame.Vector2(-math.cos(angle), math.sin(angle))
+		length_vec.scale_to_length(car.p_length / 2)
+		width_vec = pygame.Vector2(math.sin(angle), math.cos(angle))
+		width_vec.scale_to_length(car.p_width / 2)
+		corner_one = mid - width_vec - length_vec
+		corner_two = mid - width_vec + length_vec
+		corner_three = mid + width_vec + length_vec
+		corner_four = mid + width_vec - length_vec
 		return (corner_one, corner_two, corner_three, corner_four, mid)
 
 
@@ -48,9 +50,9 @@ class Map:
 	the car starting at the car's angle given and will return
 	the distances from the car to the cloest barriers
 	"""
-	def distances(car):
+	def distances(self, car):
 		points = self.getImportantPoints(car)
-		map(convertToTuple, points)
+		map(utils.convertToTuple, points)
 		corner_one, corner_two, corner_three, corner_four, mid = points
 
 		return self.getDistancesFromPoint(mid, car.angle)
@@ -60,7 +62,7 @@ class Map:
 	"""
 	def reward(self, car):
 		points = self.getImportantPoints(car)
-		map(convertToTuple, points)
+		map(utils.convertToTuple, points)
 		corner_one, corner_two, corner_three, corner_four, mid = points
 
 		left = (corner_one, corner_two)
@@ -70,9 +72,9 @@ class Map:
 		car_lines = [left, front, right, back]
 		reward = 0
 		for line in car_lines:
-			if isIntersectingBarrier:
+			if self.isIntersectingBarrier(line):
 				return BARRIER_REWARD
-			if reward != GATE_REWARD and isIntersectingRewardGate:
+			if reward != GATE_REWARD and self.isIntersectingRewardGate(line):
 				reward = GATE_REWARD
 
 		return reward
@@ -89,7 +91,7 @@ class Map:
 		for reward_line in self.reward_gates - self.seen_gates:
 			if utils.intersect(line, reward_line):
 				if SEEN_GATES:
-					seen_gates.add(reward_line)
+					self.seen_gates.add(reward_line)
 				return True
 		return False
 
@@ -187,7 +189,7 @@ class Map:
 
 
 if __name__ == '__main__':
-	test_map = Map('square-list')
+	test_map = Map('donut')
 	print(test_map)
 
 
