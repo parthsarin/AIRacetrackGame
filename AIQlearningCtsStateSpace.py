@@ -7,21 +7,20 @@ import collections # for storing (state, action) pairs
 import pickle # for storing the table
 import random
 import errors
-import QLearning
 import itertools
 
 import IO
+import QLearning
 
 MEMORY_FILE = 'memory/qlearning.mem'
 REWARD_RANGE = 100
 DEFAULT_LEARNING_RATE = .465
-QLearningData = collections.namedtuple('QLearningData', ['state', 'action'])
 
 def process(state, NUM_TO_DIR):
 	"""Decides which direction to move based on the current state.
 
-	:state: An instance of IO.State which describes the current state
-	of the game.
+	:state: The current state of the game.
+	:type state: IO.State
 	:NUM_TO_DIR: A dictionary that translates single-digit directions
 	into a dictionary of booleans containing directional information.
 	:LEARNING_RATE: A number between 0 and 1 that represents how fast
@@ -29,19 +28,17 @@ def process(state, NUM_TO_DIR):
 	"""
 	approximations = {}
 	qtable = loadQTable()
-	qstate = QLearning.QLState(state)
+	qlstate = QLearning.QLState(state)
 
+	# Approximate the value of each action
 	for direction in NUM_TO_DIR:
-		# Approximate the value of each action
-		key = (tuple(qstate.distances), tuple(qstate.velocity), direction)
+		key = QTableKey(qlstate, IO.Movement(**NUM_TO_DIR[direction]))
 		approximations[direction] = qtable[key]
 
 	print("Approximated ", approximations)
 
 	# Sort and pick the action which gives the highest approximated value
 	optimalDirection = sorted(approximations.items(), key=lambda x: x[1])[::-1][0]
-	if approximations[optimalDirection[0]]== approximations[0]:
-		return IO.Movement(front=True)
 	return IO.Movement(**NUM_TO_DIR[optimalDirection[0]])
 
 def train(state, action, reward, LEARNING_RATE = DEFAULT_LEARNING_RATE):
@@ -49,35 +46,53 @@ def train(state, action, reward, LEARNING_RATE = DEFAULT_LEARNING_RATE):
 	to the table.
 
 	:state: The state from which the action was taken.
+	:type state: IO.State
 	:action: The action that was taken.
+	:type action: IO.Movement
 	:reward: The reward that was recieved.
+	:type reward: float
 	"""
-	qlstate = QLearning.QLState(state)
-	known = QLearning.QLStateAction(qlstate, action)
-	key = (tuple(known.state.distances), tuple(known.state.velocity), known.action.asNum())
+	qlstate = QLearning.QLState(state) # convert to a QLState
 
-	qtable = loadQTable()
+	qtable = loadQTable() # load the Q-table
+	
+	# Update the value
+	key = QTableKey(qlstate, action)
+	qtable[key] = newValue(qlstate, action, reward, qtable, LEARNING_RATE)
 
-	qtable['num_runs'] += 1
-	qtable[key] = newValue(known, reward, known, qtable, LEARNING_RATE, qtable['num_runs'])
+	writeQTable(qtable) # write the table to the disk
 
-	writeQTable(qtable)
+def newValue(qlstate, action, known_reward, qtable, LEARNING_RATE):
+	"""Calculates the new value that should replace a value from the Q-table
+	after the AI has learned the reward it recieves from that point.
 
-def newValue(known, known_reward, suppositional, qtable, LEARNING_RATE, num_runs):
-	# Create a falloff function to weight the points we have info for
-	kDecay = 1 # width of one standard deviation
-	falloff_func = lambda x: np.exp(- np.pi * (x/kDecay) ** 2) # exponential decay
-
-	old_reward = qtable[suppositional]
-
-	old_state = suppositional.state.asNPArray()
-	new_state = known.state.asNPArray()
-	distance = np.linalg.norm(old_state-new_state)
-
-	new_reward = (1-LEARNING_RATE) * old_reward + falloff_func(distance) * LEARNING_RATE * known_reward
-	# new_reward = (old_reward + falloff_func(distance) * (1-LEARNING_RATE) * known_reward /num_runs) / (1 + falloff_func(distance) * (1-LEARNING_RATE) / num_runs)
+	:qlstate: The state from which the AI took the action.
+	:type qlstate: QLearning.QLState
+	:action: The action the AI took.
+	:type action: IO.Movement
+	:known_reward: The reward the AI recieved.
+	:type known_reward: float
+	:qtable: The Q-table that contains the previously-known 
+	:type qtable: collections.defaultdict
+	:LEARNING_RATE: A number between 0 and 1 that represents how fast
+	the algorithm should learn.
+	:type LEARNING_RATE: float
+	"""
+	old_reward = qtable[QTableKey(qlstate, action)]
+	new_reward = (1-LEARNING_RATE) * old_reward + LEARNING_RATE * known_reward
 
 	return new_reward
+
+def QTableKey(qlstate, action):
+	"""Constructs the key for the defaultdict that represents the
+	Q-table.
+
+	:qlstate: The state that the AI is in.
+	:type qlstate: QLearning.QLState
+	:action: The action the AI takes.
+	:type action: IO.Movement
+	"""
+	return (tuple(qlstate.distances), tuple(qlstate.velocity), action.asNum())
 
 def loadQTable():
 	"""Load the Q-table from the memory file by depickling it.
