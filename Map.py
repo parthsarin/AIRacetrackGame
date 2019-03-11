@@ -97,7 +97,7 @@ class Map:
 		distances = []
 		for l in radial_lines:
 			distances.append(self.getMinDistanceToBarrier(l, screen))
-		print(distances)
+		# print(distances)
 		return distances
 
 	def isIntersectingRewardGate(self, line):
@@ -171,7 +171,7 @@ class Map:
 		botLine = ((min_x, min_y), (max_x, min_y))
 		rightLine = ((max_x, min_y), (max_x, max_y))
 		leftLine = ((min_x, min_y), (min_x, max_y))
-		print("STARTING AT {}".format(initial_angle))
+		# print("STARTING AT {}".format(initial_angle))
 		for i in range(8):
 			s_angle = -initial_angle - i * math.pi / 4
 			angle = s_angle
@@ -198,7 +198,7 @@ class Map:
 		for l in lines:
 			if screen:
 				pygame.draw.line(screen, COLOR_CODES[self.draw], [l[0][0], l[0][1]], [l[1][0], l[1][1]], 4)
-				print(self.getMinDistanceToBarrier(l), COLOR_CODES[self.draw])
+				# print(self.getMinDistanceToBarrier(l), COLOR_CODES[self.draw])
 				self.draw = (self.draw + 1) % len(COLOR_CODES)
 
 		return lines

@@ -12,10 +12,10 @@ from pygame.math import Vector2
 current_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(current_dir, "car.png")
 
-CAR_ACCELERATION = 40
-CAR_STEERING = 3.5
+CAR_ACCELERATION = 80 #prev 40
+CAR_STEERING = 5 #prev 3.5
 CAR_BRAKING = 30
-MAX_VELOCITY = 160
+MAX_VELOCITY = 320 #prev 160
 MAX_ACCELERATION = 40
 CAR_PIXEL_HEIGHT = 60
 CAR_PIXEL_WIDTH = 30
