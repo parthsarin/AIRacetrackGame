@@ -28,7 +28,7 @@ SCREEN_SIZE = (800, 600)
 degree = 0
 blue = (0,0,255)
 IS_HUMAN = False
-
+RESET = True
 
 def pygame_modules_have_loaded():
     success = True
@@ -62,24 +62,24 @@ if __name__ == '__main__':
             # Handles user input
             # packages user input into the movement class
             # Keys(False, True, False, True) # left, right, up, down
-            if isHuman:
-                pressed = pygame.key.get_pressed()
-                np_array = np.zeros(4)
-                if pressed[pygame.K_UP]:
-                    np_array[2] = 1
-                        
-                if pressed[pygame.K_DOWN]:
-                    np_array[3] = 1
-               
-                if pressed[pygame.K_RIGHT]:
-                    np_array[1] = 1
+            pressed = pygame.key.get_pressed()
+            np_array = np.zeros(4)
+            if pressed[pygame.K_UP]:
+                np_array[2] = 1
                     
-                if pressed[pygame.K_LEFT]:
-                    np_array[0] = 1
-                return  IO.Movement(np_array)
+            if pressed[pygame.K_DOWN]:
+                np_array[3] = 1   
+            if pressed[pygame.K_RIGHT]:
+                np_array[1] = 1
+                
+            if pressed[pygame.K_LEFT]:
+                np_array[0] = 1
+            return  IO.Movement(np_array)
+
+
                     
 
-        def update(screen, dt, car, map, driver=None):
+        def update(screen, dt, car, map, driver=None, h_car=None):
             # Add in code to be run during each update cycle.
             # screen provides the PyGame Surface for the game window.
             # time provides the seconds elapsed since the last update.
@@ -91,17 +91,27 @@ if __name__ == '__main__':
             if IS_HUMAN:
                 movement = get_human_move()
             else:
-                state = map.getState(car)
+                state = map.getState(car, screen)
                 movement = driver.runAI(state)
+                print(movement)
+                print(state)
             rew = map.reward(car)
             car.move_car(movement, dt)
             car.draw(screen)
             driver.trainAI(state, movement, rew)
+
+            if h_car:
+                mvmt = get_human_move()
+                h_car.move_car(mvmt, dt)
+                h_car.draw(screen)
             
             if rew == 100:
                 print("REWARD GATE REACHED!")
             elif rew == -100:
-                print("BARRIER BAD")
+                car.angle = 90
+                car.position = pygame.Vector2(*map.starting_point)
+                car.velocity = pygame.Vector2(0, 0)
+                car.steering = car.acceleration = 0
 
             #show the screen surface
             pygame.display.flip()
@@ -112,9 +122,10 @@ if __name__ == '__main__':
         def main():
             prepare_test()
 
-            map = Map.Map("potato")
+            map = Map.Map("donut")
             (x, y) = map.starting_point
             test_car = Car.Car(x,y, angle=90)
+            human_car = Car.Car(x, y, angle=90)
             driver = AI.Driver()
             while True:
                 for event in pygame.event.get():
@@ -127,7 +138,7 @@ if __name__ == '__main__':
                 milliseconds = clock.tick(FRAME_RATE)
                 dt = milliseconds / 1000.0
 
-                update(game_screen, dt, test_car, map, driver)
+                update(game_screen, dt, test_car, map, driver, human_car)
 
                 sleep_time = (1000.0 / FRAME_RATE) - milliseconds
                 if sleep_time > 0.0:

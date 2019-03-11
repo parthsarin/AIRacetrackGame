@@ -14,6 +14,8 @@ REWARD_GATE_COLOR = (0,255,0)
 BARRIER_REWARD = -100
 GATE_REWARD = 100
 SEEN_GATES = True
+COLOR_CODES = [(255, 255, 0), (255, 0, 255), (0, 255, 255), (255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 0, 0), (255, 0, 100)]
+index = 0
 
 class Map:
 
@@ -30,17 +32,20 @@ class Map:
 		self.starting_point = map_data[2]
 		self.shape = map_data[3]
 		self.seen_gates = set()
+		self.draw = 0
 
-	def getState(self, car):
-		distances = self.getDistances(car)
+	def getState(self, car, screen=None):
+		distances = self.getDistances(car, screen)
 		velocityTuple = utils.convertToTuple(car.velocity)
 		velocity = [velocityTuple[0], velocityTuple[1]]
 		return IO.State(distances, velocity)
 
-
-
 	def getImportantPoints(self, car):
 		mid = car.position
+		if car.angle > 360:
+			car.angle -= 360
+		if car.angle < 0:
+			car.angle += 360
 		angle = car.angle * math.pi / 180 #car.angle is in degrees
 		length_vec = pygame.Vector2(-math.cos(angle), math.sin(angle))
 		length_vec.scale_to_length(car.p_length / 2)
@@ -58,12 +63,12 @@ class Map:
 	the car starting at the car's angle given and will return
 	the distances from the car to the cloest barriers
 	"""
-	def getDistances(self, car):
+	def getDistances(self, car, screen=None):
 		points = self.getImportantPoints(car)
 		map(utils.convertToTuple, points)
 		corner_one, corner_two, corner_three, corner_four, mid = points
 
-		return self.getDistancesFromPoint(mid, car.angle * math.pi / 180)
+		return self.getDistancesFromPoint(mid, car.angle * math.pi / 180, screen)
 
 	"""
 	This function will 
@@ -87,12 +92,12 @@ class Map:
 
 		return reward
 
-	def getDistancesFromPoint(self, p, angle):
-		radial_lines = self.generateRadialLines(p, angle)
+	def getDistancesFromPoint(self, p, angle, screen=None):
+		radial_lines = self.generateRadialLines(p, angle, screen)
 		distances = []
-		for line in radial_lines:
-			distances.append(self.getMinDistanceToBarrier(line))
-
+		for l in radial_lines:
+			distances.append(self.getMinDistanceToBarrier(l, screen))
+		print(distances)
 		return distances
 
 	def isIntersectingRewardGate(self, line):
@@ -118,14 +123,18 @@ class Map:
 			pygame.draw.line(screen, REWARD_GATE_COLOR, [l[0][0], l[0][1]], [l[1][0], l[1][1]], REWARD_GATE_WIDTH)
 
 
-
-	def getMinDistanceToBarrier(self, vision_line):
+	def getMinDistanceToBarrier(self, vision_line, screen=None):
 		min_distance = 100000;
 		car_point = vision_line[0]
+		min_point = vision_line[1]
 		for barrier in self.barriers:
 			if utils.intersect(vision_line, barrier):
 				intersection_point = utils.get_intersection(vision_line, barrier)
-				min_distance = min(utils.dist(intersection_point, car_point), min_distance)
+				dist = utils.dist(intersection_point, car_point)
+				if dist < min_distance:
+					min_distance = dist
+					min_point = intersection_point
+
 		return min_distance
 
 	def getBoundingIntersection(self, stub, pot_line1, pot_line2):
@@ -148,24 +157,25 @@ class Map:
 	These lines stop when they hit max_x/min_x, or max_y/min_y
 
 	"""
-	def generateRadialLines(self, p, initial_angle):
+	def generateRadialLines(self, p, initial_angle, screen):
 		max_x = self.shape[0]
 		max_y = self.shape[1]
 		min_x = 0
 		min_y = 0
 
 		lines = list()
+		self.draw = True
 
 		#Construct bounding box
 		topLine = ((min_x, max_y), (max_x, max_y))
 		botLine = ((min_x, min_y), (max_x, min_y))
 		rightLine = ((max_x, min_y), (max_x, max_y))
 		leftLine = ((min_x, min_y), (min_x, max_y))
-
+		print("STARTING AT {}".format(initial_angle))
 		for i in range(8):
-			angle = initial_angle - i * math.pi / 4
-
-			if angle < 0:
+			s_angle = -initial_angle - i * math.pi / 4
+			angle = s_angle
+			while angle < 0:
 				angle += 2 * math.pi
 
 			stub = (p, (p[0] + math.cos(angle), p[1] + math.sin(angle)))
@@ -182,7 +192,15 @@ class Map:
 				raise Exception("Angle generated not in normal bounds")
 				return None
 			lines.append((p, last_point))
-		
+
+		lines = lines[::-1]
+		lines = [lines[-1]] + lines[:-1]
+		for l in lines:
+			if screen:
+				pygame.draw.line(screen, COLOR_CODES[self.draw], [l[0][0], l[0][1]], [l[1][0], l[1][1]], 4)
+				print(self.getMinDistanceToBarrier(l), COLOR_CODES[self.draw])
+				self.draw = (self.draw + 1) % len(COLOR_CODES)
+
 		return lines
 
 	def __str__(self):
