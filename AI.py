@@ -19,9 +19,9 @@ import QLearning
 
 # Longest distance
 # CURRENT_DECISION_FN = ld.process
-# CURRENT_TRAIN_FN = lambda x, y, z, a: x
+# CURRENT_TRAIN_FN = lambda a, b, c, d: None
 # CURRENT_DATA = None
-# CURRENT_SAVE_FN = lambda x, y: x
+# CURRENT_SAVE_FN = lambda a, b: None
 # DEFAULT_SAVE_PATH = None
 
 # Antonio
