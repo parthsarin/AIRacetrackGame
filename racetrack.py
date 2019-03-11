@@ -28,7 +28,7 @@ SCREEN_SIZE = (800, 600)
 degree = 0
 blue = (0,0,255)
 IS_HUMAN = False
-RESET = True
+RESET = False
 
 def pygame_modules_have_loaded():
     success = True
@@ -77,7 +77,14 @@ if __name__ == '__main__':
             return  IO.Movement(np_array)
 
 
-                    
+        def hit(car, map):
+            if RESET:
+                car.angle = 90
+                car.position = pygame.Vector2(*map.starting_point)
+                car.velocity = pygame.Vector2(0, 0)
+                car.steering = car.acceleration = 0
+            else:      
+                car.velocity = pygame.Vector2(-10, 0)
 
         def update(screen, dt, car, map, driver=None, h_car=None):
             # Add in code to be run during each update cycle.
@@ -104,14 +111,15 @@ if __name__ == '__main__':
                 mvmt = get_human_move()
                 h_car.move_car(mvmt, dt)
                 h_car.draw(screen)
+                rew_h = map.reward(h_car)
+                if rew_h == -100:
+                    hit(h_car, map)
             
             if rew == 100:
                 print("REWARD GATE REACHED!")
             elif rew == -100:
-                car.angle = 90
-                car.position = pygame.Vector2(*map.starting_point)
-                car.velocity = pygame.Vector2(0, 0)
-                car.steering = car.acceleration = 0
+                hit(car, map)
+
 
             #show the screen surface
             pygame.display.flip()
