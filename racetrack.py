@@ -15,6 +15,7 @@ import sys
 import utils
 import Car
 import IO
+import AI
 import Map
 import numpy as np
 from pygame.locals import *
@@ -26,6 +27,7 @@ FRAME_RATE = 60.0
 SCREEN_SIZE = (800, 600)
 degree = 0
 blue = (0,0,255)
+IS_HUMAN = False
 
 
 def pygame_modules_have_loaded():
@@ -56,54 +58,46 @@ if __name__ == '__main__':
 
             pass
 
-        def handle_input():
+        def get_human_move():
             # Handles user input
             # packages user input into the movement class
             # Keys(False, True, False, True) # left, right, up, down
-
-            pressed = pygame.key.get_pressed()
-
-            np_array = np.zeros(4)
-
-            if pressed[pygame.K_UP]:
-                np_array[2] = 1
+            if isHuman:
+                pressed = pygame.key.get_pressed()
+                np_array = np.zeros(4)
+                if pressed[pygame.K_UP]:
+                    np_array[2] = 1
+                        
+                if pressed[pygame.K_DOWN]:
+                    np_array[3] = 1
+               
+                if pressed[pygame.K_RIGHT]:
+                    np_array[1] = 1
                     
-            if pressed[pygame.K_DOWN]:
-                np_array[3] = 1
-           
-            if pressed[pygame.K_RIGHT]:
-                np_array[1] = 1
-                
-            if pressed[pygame.K_LEFT]:
-                np_array[0] = 1
-            #if pressed[pygame.K_UP] and pressed[pygame.K_RIGHT]: # for testing turning
-            #    print("Both!Both!")
-
-            return  IO.Movement(np_array)
+                if pressed[pygame.K_LEFT]:
+                    np_array[0] = 1
+                return  IO.Movement(np_array)
                     
 
-        def update(screen, dt, movement, car, map):
+        def update(screen, dt, car, map, driver=None):
             # Add in code to be run during each update cycle.
             # screen provides the PyGame Surface for the game window.
             # time provides the seconds elapsed since the last update.
            
             screen.fill((255,255,255))
             map.drawOnScreen(game_screen)
-            car.move_car(movement, dt)
-            car.draw(screen)# corner_three = corner_one + length_vec + width_vec
-        # corner_two = corner_one + length_vec / 2
-        # corner_four = corner_one + width_vec / 2
-            rew = map.reward(car)
-            points = map.getImportantPoints(car)
-            corner_one, corner_two, corner_three, corner_four, mid = points
 
-            left = (corner_one, corner_two)
-            front = (corner_two, corner_three)
-            right = (corner_three, corner_four)
-            back = (corner_four, corner_one)
-            car_lines = [left, front, right, back]
-            for l in car_lines:
-                pygame.draw.line(screen, (0, 0, 255), [l[0][0], l[0][1]], [l[1][0], l[1][1]], 5)
+
+            if IS_HUMAN:
+                movement = get_human_move()
+            else:
+                state = map.getState(car)
+                movement = driver.runAI(state)
+            rew = map.reward(car)
+            car.move_car(movement, dt)
+            car.draw(screen)
+            driver.trainAI(state, movement, rew)
+            
             if rew == 100:
                 print("REWARD GATE REACHED!")
             elif rew == -100:
@@ -121,8 +115,7 @@ if __name__ == '__main__':
             map = Map.Map("potato")
             (x, y) = map.starting_point
             test_car = Car.Car(x,y, angle=90)
-            print(test_car.angle)
-            
+            driver = AI.Driver()
             while True:
                 for event in pygame.event.get():
                     if event.type == QUIT:
@@ -134,8 +127,7 @@ if __name__ == '__main__':
                 milliseconds = clock.tick(FRAME_RATE)
                 dt = milliseconds / 1000.0
 
-                movement = handle_input()
-                update(game_screen, dt, movement, test_car, map)
+                update(game_screen, dt, test_car, map, driver)
 
                 sleep_time = (1000.0 / FRAME_RATE) - milliseconds
                 if sleep_time > 0.0:

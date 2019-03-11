@@ -2,6 +2,7 @@ import pygame
 import pickle
 import utils
 import math
+import IO
 """Revision history:
  (not complete)
  @Colin changed the globals variable colros to RGB and moved globals to out of the class
@@ -30,6 +31,14 @@ class Map:
 		self.shape = map_data[3]
 		self.seen_gates = set()
 
+	def getState(self, car):
+		distances = self.getDistances(car)
+		velocityTuple = utils.convertToTuple(car.velocity)
+		velocity = [velocityTuple[0], velocityTuple[1]]
+		return IO.State(distances, velocity)
+
+
+
 	def getImportantPoints(self, car):
 		mid = car.position
 		angle = car.angle * math.pi / 180 #car.angle is in degrees
@@ -43,19 +52,18 @@ class Map:
 		corner_four = mid + width_vec - length_vec
 		return (corner_one, corner_two, corner_three, corner_four, mid)
 
-
 	"""
 	USE THIS FUNCTION for getting distances from car!
 	This function generates 8 lines at 45 degree intervals around
 	the car starting at the car's angle given and will return
 	the distances from the car to the cloest barriers
 	"""
-	def distances(self, car):
+	def getDistances(self, car):
 		points = self.getImportantPoints(car)
 		map(utils.convertToTuple, points)
 		corner_one, corner_two, corner_three, corner_four, mid = points
 
-		return self.getDistancesFromPoint(mid, car.angle)
+		return self.getDistancesFromPoint(mid, car.angle * math.pi / 180)
 
 	"""
 	This function will 
@@ -173,11 +181,8 @@ class Map:
 			else:
 				raise Exception("Angle generated not in normal bounds")
 				return None
-			print(angle * 180 / math.pi)
-			print((math.cos(angle), math.sin(angle)))
-			print((p, last_point))
 			lines.append((p, last_point))
-
+		
 		return lines
 
 	def __str__(self):
