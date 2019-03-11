@@ -3,8 +3,8 @@ RACER
 """
 import IO
 from statistics import mean
-DIST_DIFF_TO_ACT = 70
-DIST_NOT_FORWARD = 200
+DIST_DIFF_TO_ACT = 60 #prev 70
+DIST_NOT_FORWARD = 150
 
 def isNear(dirs):
     if mean(dirs) < DIST_DIFF_TO_ACT:
@@ -28,7 +28,7 @@ def process(state, data, NUM_TO_DIR):
 
     if not r and isNear(rightDirs) and not isNear(leftDirs):
             if dists[0] < DIST_NOT_FORWARD:
-                r = 7 #go left
+                r = 6 #go left
             # else:
             #     r = 7 #go forward left
 
