@@ -26,6 +26,7 @@ That's something like:
 3. Run `python3 testing.py`, sit back, and relax!
 """
 import AI
+import AI_QLearning
 import IO
 import debug
 from testing_harness import * # I know, I know... Here be dragons, but like, they're nice dragons, I promise!
@@ -33,35 +34,54 @@ from testing_harness import * # I know, I know... Here be dragons, but like, the
 """
 AI Tests
 """
-def MIBPenFlashyFlash():
+def MIBPenFlashyFlash(player):
 	"""Clears the Q-learning memory
 	"""
-	debug.resetQLearningMem()
+	debug.resetQLearningMem(player)
 
 @run_test("The AI learns to move forward if it gets rewards for doing so.", category="AI", silence=True)
 def AITest1():
-	startingState = IO.State([10, 8, 6, 8, 10, 8, 6, 8], [0,0])
+	startingState = IO.State([100, 80, 60, 80, 100, 80, 60, 80], [0,0])
 	front = IO.Movement(front=True)
+	unsuspecting_driver = AI.Driver()
 
 	for i in range(10):
-		# AI.runAI(startingState)
-		AI.trainAI(startingState, front, 100) # moving forward is, like, really cool!
+		unsuspecting_driver.trainAI(startingState, front, 100) # moving forward is, like, really cool!
 
-	outcome = (AI.runAI(startingState) == front)
-	MIBPenFlashyFlash() # be sure to do this so that the AI doesn't end up confused with previous data
+	outcome = (unsuspecting_driver.runAI(startingState) == front)
+	MIBPenFlashyFlash(unsuspecting_driver) # be sure to do this so that the AI doesn't end up confused with previous data
 	return outcome
 
 @run_test("The AI learns to move forward if it's next to a point that it knows to move forward from.", category="AI", silence=True)
 def AITest2():
-	startingState = IO.State([10, 8, 6, 8, 10, 8, 6, 8], [0,0])
+	startingState = IO.State([100, 80, 60, 80, 100, 80, 60, 80], [0,0])
 	front = IO.Movement(front=True)
+	driver = AI.Driver()
 
 	for i in range(10):
-		AI.trainAI(startingState, front, 100) # moving forward is, like, really cool!
+		driver.trainAI(startingState, front, 100) # moving forward is, like, really cool!
 
-	shiftedStartingState = IO.State([10, 9, 7, 9, 10, 7, 5, 7], [0,0]) # shifted to the left
-	outcome = (AI.runAI(shiftedStartingState) == front)
-	MIBPenFlashyFlash()
+	shiftedStartingState = IO.State([100, 85, 75, 85, 100, 75, 55, 75], [0,0]) # shifted to the left
+	outcome = (driver.runAI(shiftedStartingState) == front)
+	MIBPenFlashyFlash(driver)
+	return outcome
+
+@run_test("The AI properly stores its Q-table.", category="AI", silence=False)
+def AITest3():
+	startingState = IO.State([100, 80, 60, 80, 100, 80, 60, 80], [0,0])
+	front = IO.Movement(front=True)
+	driver = AI.Driver()
+
+	for i in range(10):
+		driver.trainAI(startingState, front, 100) # moving forward is, like, really cool!
+
+	ai_data = driver.ai_data
+
+	driver.saveAIData() # write the data to the disk
+	loaded_data = AI_QLearning.loadQTable()
+
+	outcome = (ai_data == loaded_data) # the correct info is being written
+	MIBPenFlashyFlash(driver)
 	return outcome
 
 """

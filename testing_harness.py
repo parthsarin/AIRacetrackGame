@@ -5,6 +5,7 @@ import errors
 import sys
 import collections
 import pip
+import traceback
 
 """
 Silence output
@@ -94,7 +95,7 @@ def run_test(name, category='default', silence=False):
 			except Exception as e:
 				print(opt_colored('FAIL: {}'.format(name), 'red'))
 				print(opt_colored("The test raised the following exception:", 'red'))
-				print(opt_colored(str(e), 'green'))
+				traceback.print_exc()
 
 			# Make sure that the output is boolean
 			if type(output) != bool:

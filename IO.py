@@ -22,6 +22,18 @@ class Movement:
         np_array positionally or with np_array = (array).
 
     """
+    DIR_TO_NUM = {
+        (False, False, True, False): 0,
+        (False, True, True, False): 1,
+        (False, True, False, False): 2,
+        (False, True, False, True): 3,
+        (False, False, False, True): 4,
+        (True, False, False, True): 5,
+        (True, False, False, False): 6,
+        (True, False, True, False): 7,
+        (False, False, False, False): 8
+    }
+
     def __init__(self, *args, **kwargs):
         """Initializes the Movement class.
 
@@ -72,19 +84,7 @@ class Movement:
 
         :returns: the number of the direction representing the class
         """
-        DIR_TO_NUM = {
-            (False, False, True, False): 0,
-            (False, True, True, False): 1,
-            (False, True, False, False): 2,
-            (False, True, False, True): 3,
-            (False, False, False, True): 4,
-            (True, False, False, True): 5,
-            (True, False, False, False): 6,
-            (True, False, True, False): 7,
-            (False, False, False, False): 8
-        }
-
-        return DIR_TO_NUM[(self.left, self.right, self.front, self.back)]
+        return Movement.DIR_TO_NUM[(self.left, self.right, self.front, self.back)]
 
     def _get_params(self, args, kwargs):
         """Parses `args` and `kwargs` for the left, right, front, and back
@@ -163,6 +163,9 @@ class Movement:
         return self.asNum()
 
 class State:
+    NUM_DISTANCES = 8
+    NUM_VEL = 2
+    
     def __init__(self, distances, velocity):
         """Initialize the State class.
 
