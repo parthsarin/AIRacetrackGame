@@ -5,23 +5,31 @@ import IO
 
 ### AIs ###
 import AI_longest_distance as ld
+import AI_antonio as best
 import AI_QLearning as ql
 import QLearning
 
 ### CURRENT AI PARAMS ###
-# Q-learning
-CURRENT_DECISION_FN = ql.process
-CURRENT_TRAIN_FN = ql.train
-CURRENT_DATA = ql.loadQTable()
-CURRENT_SAVE_FN = ql.writeQTable
-DEFAULT_SAVE_PATH = ql.MEMORY_FILE
+# # Q-learning
+# CURRENT_DECISION_FN = ql.process
+# CURRENT_TRAIN_FN = ql.train
+# CURRENT_DATA = ql.loadQTable()
+# CURRENT_SAVE_FN = ql.writeQTable
+# DEFAULT_SAVE_PATH = ql.MEMORY_FILE
 
 # Longest distance
 # CURRENT_DECISION_FN = ld.process
-# CURRENT_TRAIN_FN = pass
+# CURRENT_TRAIN_FN = lambda x, y, z, a: x
 # CURRENT_DATA = None
-# CURRENT_SAVE_FN = pass
+# CURRENT_SAVE_FN = lambda x, y: x
 # DEFAULT_SAVE_PATH = None
+
+# Antonio
+CURRENT_DECISION_FN = best.process
+CURRENT_TRAIN_FN = lambda x, y, z, a: x
+CURRENT_DATA = None
+CURRENT_SAVE_FN = lambda x, y: x
+DEFAULT_SAVE_PATH = None
 
 class Driver:
     def __init__(self):

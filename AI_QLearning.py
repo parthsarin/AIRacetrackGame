@@ -40,6 +40,8 @@ def process(state, qtable, NUM_TO_DIR):
 
 	# Sort and pick the action which gives the highest approximated value
 	optimalDirection = sorted(approximations.items(), key=lambda x: x[1])[::-1][0]
+	if optimalDirection[1] == approximations[0]:
+		return IO.Movement(front=True)
 	return IO.Movement(**NUM_TO_DIR[optimalDirection[0]])
 
 def train(state, action, reward, qtable, LEARNING_RATE = DEFAULT_LEARNING_RATE):

@@ -2,20 +2,21 @@ import os
 import pygame
 from math import tan, radians, degrees, copysign
 from pygame.math import Vector2
+import IO
 
-CAR_ACCELERATION = 1.5
+CAR_ACCELERATION = 4
 CAR_STEERING = 30
-CAR_BRAKING = 30
+CAR_BRAKING = 8
 MAX_VELOCITY = 80
 
 
-class Car:
+class Car2:
     def __init__(self, x, y, angle=0.0, length=4, max_steering=30, max_acceleration=5.0):
         self.position = Vector2(x, y)
         self.velocity = Vector2(0.0, 0.0)
         self.angle = angle
         self.length = length
-        self.max_acceleration = max_acceleration
+        self.max_acceleration = max(max_acceleration, CAR_BRAKING)
         self.max_steering = max_steering
         self.max_velocity = MAX_VELOCITY
         self.brake_deceleration = CAR_BRAKING
@@ -25,6 +26,8 @@ class Car:
         self.steering = 0.0
 
     def update(self, dt):
+        if self.velocity:
+            print("vel: {} acc: {}".format(self.velocity, self.acceleration))
         self.velocity += (self.acceleration * dt, 0)
         self.velocity.x = max(-self.max_velocity, min(self.velocity.x, self.max_velocity))
 
@@ -36,6 +39,40 @@ class Car:
 
         self.position += self.velocity.rotate(-self.angle) * dt
         self.angle += degrees(angular_velocity) * dt
+
+    def move(self, movement, dt):
+        if self.velocity.x < 0 and self.acceleration == -self.brake_deceleration:
+            self.acceleration = 0
+        elif self.velocity.x > 0 and self.acceleration == self.brake_deceleration:
+            self.acceleration = 0
+        if movement.front:
+            if self.velocity.x < 0:
+                self.acceleration = self.brake_deceleration
+            else:
+                self.acceleration += CAR_ACCELERATION * dt
+        elif movement.back:
+            if self.velocity.x > 0:
+                self.acceleration = -self.brake_deceleration
+            else:
+                self.acceleration -= CAR_ACCELERATION * dt
+        else:
+            if abs(self.velocity.x) > dt * self.free_deceleration:
+                self.acceleration = -copysign(self.free_deceleration, self.velocity.x)
+            else:
+                if dt != 0:
+                    self.acceleration = -self.velocity.x / dt
+        self.acceleration = max(-self.max_acceleration, min(self.acceleration, self.max_acceleration))
+
+        if movement.right:
+            self.steering -= CAR_STEERING * dt
+        elif movement.left:
+            self.steering += CAR_STEERING * dt
+        else:
+            self.steering = 0
+        self.steering = max(-self.max_steering, min(self.steering, self.max_steering))
+
+        # Logic
+        self.update(dt)
 
 
 class Game:
@@ -53,7 +90,7 @@ class Game:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, "car.png")
         car_image = pygame.image.load(image_path)
-        car = Car(0, 0)
+        car = Car2(0, 0)
         ppu = 32
 
         while not self.exit:
@@ -66,40 +103,15 @@ class Game:
 
             # User input
             pressed = pygame.key.get_pressed()
+            pressed = list(map(bool, pressed))
+            if(pressed[pygame.K_UP]):
+                print("UP")
+            if(pressed[pygame.K_DOWN]):
+                print("DOWN")
+            m = IO.Movement(pressed[pygame.K_LEFT], pressed[pygame.K_RIGHT], pressed[pygame.K_UP], pressed[pygame.K_DOWN])
+            print(m)
 
-            if pressed[pygame.K_UP]:
-                if car.velocity.x < 0:
-                    car.acceleration = car.brake_deceleration
-                else:
-                    car.acceleration += CAR_ACCELERATION * dt
-            elif pressed[pygame.K_DOWN]:
-                if car.velocity.x > 0:
-                    car.acceleration = -car.brake_deceleration
-                else:
-                    car.acceleration -= CAR_ACCELERATION * dt
-            elif pressed[pygame.K_SPACE]:
-                if abs(car.velocity.x) > dt * car.brake_deceleration:
-                    car.acceleration = -copysign(car.brake_deceleration, car.velocity.x)
-                else:
-                    car.acceleration = -car.velocity.x / dt
-            else:
-                if abs(car.velocity.x) > dt * car.free_deceleration:
-                    car.acceleration = -copysign(car.free_deceleration, car.velocity.x)
-                else:
-                    if dt != 0:
-                        car.acceleration = -car.velocity.x / dt
-            car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
-
-            if pressed[pygame.K_RIGHT]:
-                car.steering -= CAR_STEERING * dt
-            elif pressed[pygame.K_LEFT]:
-                car.steering += CAR_STEERING * dt
-            else:
-                car.steering = 0
-            car.steering = max(-car.max_steering, min(car.steering, car.max_steering))
-
-            # Logic
-            car.update(dt)
+            car.move(m, dt)
 
             # Drawing
             self.screen.fill((0, 0, 0))

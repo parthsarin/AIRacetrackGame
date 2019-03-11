@@ -1,5 +1,6 @@
 import math
 import Map
+import pygame
 
 def det(a, b):
         return a[0] * b[1] - a[1] * b[0]
@@ -36,8 +37,8 @@ def get_intersection(line1, line2):
     return x, y
 
 def convertToTuple(vector2):
-	x = int(car.position.dot(pygame.Vector2(1, 0)))
-	y = int(car.position.dot(pygame.Vector2(0, 1)))
+	x = int(vector2.dot(pygame.Vector2(1, 0)))
+	y = int(vector2.dot(pygame.Vector2(0, 1)))
 	return (x, y)
 
 

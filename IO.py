@@ -190,7 +190,7 @@ class State:
         """Represents the class as a string.
         """
         normed_vel = self.velocity
-        if self.velocity_magnitude != 0:
-            normed_vel /= self.velocity_magnitude
+        # if self.velocity_magnitude != 0:
+        #     normed_vel /= self.velocity_magnitude
 
         return '<IO.State: Moving towards {} with speed {}. Distances: {}>'.format(list(normed_vel), round(self.velocity_magnitude, 3), list(self.distances))
