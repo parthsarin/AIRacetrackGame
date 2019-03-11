@@ -118,7 +118,7 @@ if __name__ == '__main__':
         def main():
             prepare_test()
 
-            map = Map.Map("donut")
+            map = Map.Map("potato")
             (x, y) = map.starting_point
             test_car = Car.Car(x,y, angle=90)
             print(test_car.angle)

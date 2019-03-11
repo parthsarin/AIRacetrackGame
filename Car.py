@@ -13,12 +13,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(current_dir, "car.png")
 
 CAR_ACCELERATION = 40
-CAR_STEERING = 15
+CAR_STEERING = 7
 CAR_BRAKING = 30
-MAX_VELOCITY = 80
+MAX_VELOCITY = 160
 MAX_ACCELERATION = 40
-CAR_PIXEL_HEIGHT = 100
-CAR_PIXEL_WIDTH = 50
+CAR_PIXEL_HEIGHT = 60
+CAR_PIXEL_WIDTH = 30
 
 
 
