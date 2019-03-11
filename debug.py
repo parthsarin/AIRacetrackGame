@@ -2,12 +2,12 @@
 Some debug functions.
 """
 import pickle
-import AIQlearningCtsStateSpace
+import AI_QLearning
 import QLearning
 
-def resetQLearningMem():
+def resetQLearningMem(player):
 	"""Resets the q-learning table
 	"""
 	blankTable = QLearning.initArray()
-	with open(AIQlearningCtsStateSpace.MEMORY_FILE, 'wb') as f:
+	with open(AI_QLearning.MEMORY_FILE, 'wb') as f:
 		pickle.dump(blankTable, f)
