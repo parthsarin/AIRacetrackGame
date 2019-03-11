@@ -139,6 +139,7 @@ Alright, it's been a while, so let me get you up to speed:
 	<img width="600px" src="img/testing.png" />
 </p>
 He spent an obscene amount of time trying to get the colors to display correctly...
+
 5. On Thursday, Parth and Jade redesigned their algorithm so the AI didn't have to loop over **every single data point** every time it made a decision; they decided to rescale the distance and velocity vectors so that each of the entries in the distance vector was a number from 0 to 11 and each of the entries in the velocity vector was a number from 0 to 10. The two vectors together give a vector with 10 entries. All of the possible distance/velocities (i.e. all of the possible **states**) can be represented as an 11 x 11 x ... x 11 x 10 x 10 table! Then, there are 8 possible actions. So, all possible `(state, action)` pairs live in a 11 x 11 x ... x 11 x 10 x 10 x 8 table. This kind of structure, in this context, is usually called a **q-table**. Parth and Jade wanted to implement this in the following way:
 	1. Initialize the table with all entries equal to zero.
 	2. Whenever the algorithm performs `action` from a particular `state`, update the value of the table at `(state, action)` based on the reward that the algorithm recieved from performing that action.
