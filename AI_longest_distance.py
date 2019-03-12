@@ -17,10 +17,8 @@ def process(state, data, NUM_TO_DIR):
     # Note to self: why would we ever move backwards?
     IGNORE_INDICES = {3, 4, 5} # don't move backwards
 
-    sorted_distances = sorted(enumerate(state.distances), key=lambda x: x[1])[::-1]
+    sorted_distances = enumerate(state.distances)
+    sorted_distances = list(filter(lambda x: not x[0] in IGNORE_INDICES, sorted_distances))
+    sorted_distances = sorted(sorted_distances, key=lambda x: x[1])[::-1]
 
-    for direction in sorted_distances:
-        if direction[0] in IGNORE_INDICES:
-            continue
-
-        return IO.Movement(**NUM_TO_DIR[direction[0]])
+    return IO.Movement(**NUM_TO_DIR[sorted_distances[0][0]])

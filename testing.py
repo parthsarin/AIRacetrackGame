@@ -1,7 +1,7 @@
 """
 Whoo! Gotta love testing.
 
-Here's the dealio (a.k.a. how to set up a test): 
+Here's the dealio (a.k.a. how to set up a test):
 1. Wrap it with the decorator
 	@run_test("NAME OF TEST HERE")
 	def test1():
@@ -15,7 +15,7 @@ Here's the dealio (a.k.a. how to set up a test):
 	You can also, optionally, assign categories to each of your tests with
 	@run_test("NAME OF TEST HERE", category="AI")
 
-2. Have it return a boolean as to whether it passed the test. 
+2. Have it return a boolean as to whether it passed the test.
 If there are a bunch of tests, you can do this with a truthtable.
 That's something like:
 	outcome1 = (result1 == expected1)
@@ -27,6 +27,7 @@ That's something like:
 """
 import AI
 import AI_QLearning
+import AI_longest_distance
 import IO
 import debug
 from testing_harness import * # I know, I know... Here be dragons, but like, they're nice dragons, I promise!
@@ -34,10 +35,34 @@ from testing_harness import * # I know, I know... Here be dragons, but like, the
 """
 AI Tests
 """
+NUM_TO_DIR = {
+     0: { 'front': True },
+     1: { 'front': True, 'right': True },
+     2: { 'right': True },
+     3: { 'right': True,'back': True },
+     4: { 'back': True },
+     5: { 'back': True,'left': True },
+     6: { 'left': True },
+     7: { 'left': True, 'front': True },
+     8: {}
+ }
+
 def MIBPenFlashyFlash(player):
 	"""Clears the Q-learning memory
 	"""
 	debug.resetQLearningMem(player)
+
+
+@run_test("The longest distance AI picks the longest distance in a few tests.", category="AI")
+def LongestDistanceTest1():
+    state1 = IO.State([100, 80, 60, 80, 100, 80, 60, 80], [0,0])
+    state2 = IO.State([238, 799, 67, 142, 38, 437, 21, 280], [123,0])
+    p = AI_longest_distance.process
+
+    outcome1 = (p(state1, [], NUM_TO_DIR) == IO.Movement(front=True))
+    outcome2 = (p(state2, [], NUM_TO_DIR) == IO.Movement(front=True, right=True))
+
+    return all([outcome1, outcome2])
 
 @run_test("The AI learns to move forward if it gets rewards for doing so.", category="AI", silence=True)
 def AITest1():
