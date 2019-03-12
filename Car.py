@@ -20,8 +20,6 @@ MAX_ACCELERATION = 40
 CAR_PIXEL_HEIGHT = 60
 CAR_PIXEL_WIDTH = 30
 
-
-
 class Car:
 
     """Initializes CAR class.

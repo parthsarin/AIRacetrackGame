@@ -2,6 +2,9 @@
 Interfaces with the AI algorithm.
 """
 import IO
+import contextlib # for silencing racetrack... YES IT BOTHERS ME THAT MUCH, OKAY
+with contextlib.redirect_stdout(None):
+    import racetrack # sadly, this is just for a single value
 
 ### AIs ###
 import AI_longest_distance as ld
@@ -16,6 +19,8 @@ import QLearning
 # CURRENT_DATA = ql.loadQTable()
 # CURRENT_SAVE_FN = ql.writeQTable
 # DEFAULT_SAVE_PATH = ql.MEMORY_FILE
+# BACKPROPOGATION = True
+# BACKPROPOGATION_LEN = int(int(racetrack.FRAME_RATE) / 2)
 
 # Longest distance
 CURRENT_DECISION_FN = ld.process
@@ -23,6 +28,7 @@ CURRENT_TRAIN_FN = lambda a, b, c, d: None
 CURRENT_DATA = None
 CURRENT_SAVE_FN = lambda a, b: None
 DEFAULT_SAVE_PATH = None
+BACKPROPOGATION = False
 
 # Antonio
 # CURRENT_DECISION_FN = best.process
@@ -30,6 +36,7 @@ DEFAULT_SAVE_PATH = None
 # CURRENT_DATA = None
 # CURRENT_SAVE_FN = lambda x, y: x
 # DEFAULT_SAVE_PATH = None
+# BACKPROPOGATION = False
 
 class Driver:
     def __init__(self):
@@ -40,6 +47,7 @@ class Driver:
         self.train_fn = CURRENT_TRAIN_FN
         self.ai_data = CURRENT_DATA
         self.save_fn = CURRENT_SAVE_FN
+        self.past_actions = []
 
     def runAI(self, state):
         """Interfaces with the selected AI algorithm by sending it
@@ -62,7 +70,10 @@ class Driver:
             8: {}
         }
 
-        return self.decision_fn(state, self.ai_data, NUM_TO_DIR)
+        output = self.decision_fn(state, self.ai_data, NUM_TO_DIR)
+        self.past_actions.append((state, action))
+
+        return output
 
     def trainAI(self, state, action, reward):
         """Trains the AI that the action it performed gave it a
@@ -75,7 +86,22 @@ class Driver:
         :reward: The reward the AI recieved.
         :type reward: float
         """
-        self.ai_data = self.train_fn(state, action, reward, self.ai_data)
+        if reward != 0:
+        	self.ai_data = self.train_fn(state, action, reward, self.ai_data)
+        	if BACKPROPOGATION:
+        		# Depending on the reward, we want to backpropogate different distances
+        		if reward > 0:
+        			dist = BACKPROPOGATION_LEN * 5
+        		elif reward < -50:
+        			dist = int(BACKPROPOGATION_LEN*1.5)
+        		else:
+        			dist = BACKPROPOGATION_LEN
+
+        		to_amend = self.past_actions[-dist:][::-1]
+        		falloff = lambda x: -x/bac_dist + 1 # a linear falloff in the effect of backpropogation
+
+        		for i, (old_state, old_action) in enumerate(to_amend):
+        			self.ai_data = self.train_fn(old_state, old_action, reward * falloff(i), self.ai_data)
 
     def saveAIData(self, path=DEFAULT_SAVE_PATH):
         """Saves the AI data to the disk.

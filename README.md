@@ -30,15 +30,12 @@ right	-	Turns the steering wheel 90 degrees clockwise
 left	-	Turns the steering wheel 90 degrees counter-clockwise
 ```
 
+By default, when you crash into a wall, the car will reset to the starting point. You can change this in `racetrack.py` by changing `RESET` to `False` on line 31.
+
 ## Changing the AI
 We have a set of variables that dictate the AI in use that can be commented in and out as below. The first one is the Q-Learning implementation. The second is the longest distance based set of rules. The third is Antonio's (minor) changes to the longest distance AI that he seems unreasonably proud of. Just comment these in and out to see each one.
 
 ```python
-"""
-Interfaces with the AI algorithm.
-"""
-import IO
-
 ### AIs ###
 import AI_longest_distance as ld
 import AI_antonio as best
@@ -52,6 +49,8 @@ import QLearning
 # CURRENT_DATA = ql.loadQTable()
 # CURRENT_SAVE_FN = ql.writeQTable
 # DEFAULT_SAVE_PATH = ql.MEMORY_FILE
+# BACKPROPOGATION = True
+# BACKPROPOGATION_LEN = int(int(racetrack.FRAME_RATE) / 2)
 
 # Longest distance
 CURRENT_DECISION_FN = ld.process
@@ -59,6 +58,7 @@ CURRENT_TRAIN_FN = lambda a, b, c, d: None
 CURRENT_DATA = None
 CURRENT_SAVE_FN = lambda a, b: None
 DEFAULT_SAVE_PATH = None
+BACKPROPOGATION = False
 
 # Antonio
 # CURRENT_DECISION_FN = best.process
@@ -66,6 +66,7 @@ DEFAULT_SAVE_PATH = None
 # CURRENT_DATA = None
 # CURRENT_SAVE_FN = lambda x, y: x
 # DEFAULT_SAVE_PATH = None
+# BACKPROPOGATION = False
 ```
 
 Just a tip about the success rate (mileage? 😉) you're likely to achieve with each of these algorithms:
