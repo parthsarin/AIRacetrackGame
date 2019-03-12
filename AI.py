@@ -18,18 +18,18 @@ import QLearning
 # DEFAULT_SAVE_PATH = ql.MEMORY_FILE
 
 # Longest distance
-# CURRENT_DECISION_FN = ld.process
-# CURRENT_TRAIN_FN = lambda a, b, c, d: None
-# CURRENT_DATA = None
-# CURRENT_SAVE_FN = lambda a, b: None
-# DEFAULT_SAVE_PATH = None
+CURRENT_DECISION_FN = ld.process
+CURRENT_TRAIN_FN = lambda a, b, c, d: None
+CURRENT_DATA = None
+CURRENT_SAVE_FN = lambda a, b: None
+DEFAULT_SAVE_PATH = None
 
 # Antonio
-CURRENT_DECISION_FN = best.process
-CURRENT_TRAIN_FN = lambda x, y, z, a: x
-CURRENT_DATA = None
-CURRENT_SAVE_FN = lambda x, y: x
-DEFAULT_SAVE_PATH = None
+# CURRENT_DECISION_FN = best.process
+# CURRENT_TRAIN_FN = lambda x, y, z, a: x
+# CURRENT_DATA = None
+# CURRENT_SAVE_FN = lambda x, y: x
+# DEFAULT_SAVE_PATH = None
 
 class Driver:
     def __init__(self):
