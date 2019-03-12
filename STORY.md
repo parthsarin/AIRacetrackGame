@@ -147,4 +147,15 @@ He spent an obscene amount of time trying to get the colors to display correctly
 	4. To predict the value of the reward for `(state, action)`, just pull the number out of the q-table.
 6. That same day, Antonio started to write a function to train the AI and Colin got rotation down...sort of... Currently, if you rotate it for more than 3 seconds, it spins into a black hole of death (I estimate its rotational velocity at around 25mph).
 
+## Tuesday, March 11
+The last few days have been pretty busy:
+
+* On Friday, the AI team implemented its new Q-learning algorithm and after training on 10 points, the filesize was roughly 1 GB. This was not going to work. So, instead of updating the neighbors of the point that the AI trained at, they just updated the point itself.
+* On Saturday, Jade locked herself in her room to work on CS 107 and didn't eat until "second dinner" when she ate roughly 3,000 calories.
+* On Sunday, we fixed most of the major bugs with the graphics design and integrated the AI side with the Graphics side at night. Our parachute AI behaved incredibly well! We all celebrated and went to bed.
+* On Monday, the AI team got together around 9:30pm to start training the new Q-learning AI. They spent the night tweaking some parameters, dotting their i's, and crossing their t's. Jade forgot her keys so she couldn't go back to her room when she wanted to and Parth is actually insane, so they ended up working together until 2:30am. Jade and Parth also assembled the project for submission and added a README. Parth started making a video of the project and insisted on using *every single default iMovie animation/background/title*. They left the AI to train overnight on Colin's computer.
+* The next morning, the group discovered that the program had crashed after only 50,000 iterations (roughly 50-70 laps around the course). This isn't much, and the AI wasn't trained very well. Regardless, they finished the video, added the soundtrack from Chariots of Fire underneath, and submitted it.
+
+Thanks for teaching the class, Sam... You're the best – we're gonna miss you. ❤️
+
 > With <3 by @jpac
