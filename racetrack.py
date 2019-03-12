@@ -28,7 +28,7 @@ SCREEN_SIZE = (800, 600)
 degree = 0
 blue = (0,0,255)
 IS_HUMAN = False
-RESET = False
+RESET = True
 
 def pygame_modules_have_loaded():
     success = True
@@ -83,10 +83,11 @@ if __name__ == '__main__':
                 car.position = pygame.Vector2(*map.starting_point)
                 car.velocity = pygame.Vector2(0, 0)
                 car.steering = car.acceleration = 0
+                map.seen_gates = set()
             else:      
                 car.velocity = pygame.Vector2(-10, 0)
 
-        def update(screen, dt, car, map, driver=None, h_car=None):
+        def update(screen, dt, car, map, driver=None, h_car=None, FRAMES_STILL = 0):
             # Add in code to be run during each update cycle.
             # screen provides the PyGame Surface for the game window.
             # time provides the seconds elapsed since the last update.
@@ -100,12 +101,21 @@ if __name__ == '__main__':
             else:
                 state = map.getState(car, screen)
                 movement = driver.runAI(state)
-                print(movement)
-                print(state)
+                # print(movement)
+                # print(state)
+
             rew = map.reward(car)
             car.move_car(movement, dt)
             car.draw(screen)
             driver.trainAI(state, movement, rew)
+
+            # Punish the car for staying still for too long
+            if car.velocity.x <= 10:
+                FRAMES_STILL += 1
+
+            if FRAMES_STILL == 180:
+                rew = -50
+                FRAMES_STILL = 0
 
             if h_car:
                 mvmt = get_human_move()
@@ -115,15 +125,15 @@ if __name__ == '__main__':
                 if rew_h == -100:
                     hit(h_car, map)
             
-            if rew == 100:
-                print("REWARD GATE REACHED!")
-            elif rew == -100:
+            if rew == -100 or rew == -50:
                 hit(car, map)
 
 
             #show the screen surface
             pygame.display.flip()
             pygame.display.update()
+
+            return FRAMES_STILL
 
         # Add additional methods here.
 
@@ -135,6 +145,9 @@ if __name__ == '__main__':
             test_car = Car.Car(x,y, angle=90)
             human_car = Car.Car(x, y, angle=90)
             driver = AI.Driver()
+
+            FRAMES_STILL = 0
+
             while True:
                 for event in pygame.event.get():
                     if event.type == QUIT:
@@ -146,7 +159,7 @@ if __name__ == '__main__':
                 milliseconds = clock.tick(FRAME_RATE)
                 dt = milliseconds / 1000.0
 
-                update(game_screen, dt, test_car, map, driver, human_car)
+                FRAMES_STILL = update(game_screen, dt, test_car, map, driver, human_car, FRAMES_STILL)
 
                 sleep_time = (1000.0 / FRAME_RATE) - milliseconds
                 if sleep_time > 0.0:

@@ -101,6 +101,8 @@ class Map:
 		return distances
 
 	def isIntersectingRewardGate(self, line):
+		if not self.reward_gates - self.seen_gates:
+			self.seen_gates = set()
 		for reward_line in self.reward_gates - self.seen_gates:
 			if utils.intersect(line, reward_line):
 				if SEEN_GATES:

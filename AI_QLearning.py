@@ -14,7 +14,7 @@ import QLearning
 
 MEMORY_FILE = 'memory/qlearning.mem'
 REWARD_RANGE = 100
-DEFAULT_LEARNING_RATE = .465
+DEFAULT_LEARNING_RATE = .8
 
 def process(state, qtable, NUM_TO_DIR):
 	"""Decides which direction to move based on the current state.
@@ -28,11 +28,24 @@ def process(state, qtable, NUM_TO_DIR):
 	:NUM_TO_DIR: A dictionary that translates single-digit directions
 	into a dictionary of booleans containing directional information.
 	"""
+	NUM_TO_DIR = {
+        7: { 'front': True },
+        8: { 'front': True, 'right': True },
+        6: { 'right': True },
+        5: { 'right': True,'back': True },
+        4: { 'back': True },
+        3: { 'back': True,'left': True },
+        2: { 'left': True },
+        1: { 'left': True, 'front': True },
+        0: {}
+    }
+
 	approximations = {}
 	qlstate = QLearning.QLState(state)
 
 	# Approximate the value of each action
-	for direction in NUM_TO_DIR:
+	INDICES = set(range(9)) - {6, 2, 0}
+	for direction in INDICES:
 		key = QTableKey(qlstate, IO.Movement(**NUM_TO_DIR[direction]))
 		approximations[direction] = qtable[key]
 
@@ -40,8 +53,6 @@ def process(state, qtable, NUM_TO_DIR):
 
 	# Sort and pick the action which gives the highest approximated value
 	optimalDirection = sorted(approximations.items(), key=lambda x: x[1])[::-1][0]
-	if optimalDirection[1] == approximations[0]:
-		return IO.Movement(front=True)
 	return IO.Movement(**NUM_TO_DIR[optimalDirection[0]])
 
 def train(state, action, reward, qtable, LEARNING_RATE = DEFAULT_LEARNING_RATE):
