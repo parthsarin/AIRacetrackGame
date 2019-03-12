@@ -71,7 +71,7 @@ class Driver:
         }
 
         output = self.decision_fn(state, self.ai_data, NUM_TO_DIR)
-        self.past_actions.append((state, action))
+        self.past_actions.append((state, output))
 
         return output
 

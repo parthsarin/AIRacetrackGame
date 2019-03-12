@@ -124,9 +124,7 @@ if __name__ == '__main__':
                 if rew_h == -100:
                     hit(h_car, map)
             
-            if rew == 100:
-                print("REWARD GATE REACHED!")
-            elif rew == -100 or rew = -50:
+            if rew == -100 or rew == -50:
                 hit(car, map)
 
 
