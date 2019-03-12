@@ -83,6 +83,7 @@ if __name__ == '__main__':
                 car.position = pygame.Vector2(*map.starting_point)
                 car.velocity = pygame.Vector2(0, 0)
                 car.steering = car.acceleration = 0
+                map.seen_gates = set()
             else:      
                 car.velocity = pygame.Vector2(-10, 0)
 

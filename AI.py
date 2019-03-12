@@ -16,7 +16,8 @@ import QLearning
 # # Q-learning
 # CURRENT_DECISION_FN = ql.process
 # CURRENT_TRAIN_FN = ql.train
-# CURRENT_DATA = ql.loadQTable()
+# CURRENT_DATA = ql.loadQTable
+# DEFAULT_DATA_PATH = "memory/qlearning.mem"
 # CURRENT_SAVE_FN = ql.writeQTable
 # DEFAULT_SAVE_PATH = ql.MEMORY_FILE
 # BACKPROPOGATION = True
@@ -25,7 +26,8 @@ import QLearning
 # Longest distance
 CURRENT_DECISION_FN = ld.process
 CURRENT_TRAIN_FN = lambda a, b, c, d: None
-CURRENT_DATA = None
+CURRENT_DATA = lambda: None
+DEFAULT_DATA_PATH = ""
 CURRENT_SAVE_FN = lambda a, b: None
 DEFAULT_SAVE_PATH = None
 BACKPROPOGATION = False
@@ -33,19 +35,23 @@ BACKPROPOGATION = False
 # Antonio
 # CURRENT_DECISION_FN = best.process
 # CURRENT_TRAIN_FN = lambda x, y, z, a: x
-# CURRENT_DATA = None
+# CURRENT_DATA = lambda: None
+# DEFAULT_DATA_PATH = ""
 # CURRENT_SAVE_FN = lambda x, y: x
 # DEFAULT_SAVE_PATH = None
 # BACKPROPOGATION = False
 
 class Driver:
-    def __init__(self):
+    def __init__(self, memory=DEFAULT_DATA_PATH):
         """Instantiates the driver by copying the module globals onto
         the object.
         """
         self.decision_fn = CURRENT_DECISION_FN
         self.train_fn = CURRENT_TRAIN_FN
-        self.ai_data = CURRENT_DATA
+        if memory:
+            self.ai_data = CURRENT_DATA(memory)
+        else:
+            self.ai_data = CURRENT_DATA()
         self.save_fn = CURRENT_SAVE_FN
         self.past_actions = []
 
@@ -98,7 +104,7 @@ class Driver:
         			dist = BACKPROPOGATION_LEN
 
         		to_amend = self.past_actions[-dist:][::-1]
-        		falloff = lambda x: -x/bac_dist + 1 # a linear falloff in the effect of backpropogation
+        		falloff = lambda x: -x/dist + 1 # a linear falloff in the effect of backpropogation
 
         		for i, (old_state, old_action) in enumerate(to_amend):
         			self.ai_data = self.train_fn(old_state, old_action, reward * falloff(i), self.ai_data)
