@@ -5,7 +5,7 @@ There are a few executables in this file:
 
 ```
 racetrack.py	-	Play the racing game against an AI!
-testing.py		-	Run our fully-functional testing suite.
+testing.py	-	Run our fully-functional testing suite.
 mapCreator.py	-	Design custom maps to play the game on.
 ```
 
@@ -24,7 +24,7 @@ mapCreator.py	-	Design custom maps to play the game on.
 This is pretty straightforward:
 
 ```
-up		-	Accelerates forward
+up	-	Accelerates forward
 down	-	Accelerates backwards
 right	-	Turns the steering wheel 90 degrees clockwise
 left	-	Turns the steering wheel 90 degrees counter-clockwise
@@ -85,4 +85,4 @@ I just want to reitrate that Sam is the best person ever for forcing us to imple
 
 Q-learning works by giving the AI a reward or punishment for its actions. Our journey to a "working" q-learning algorithm was very rough; we designed many of our own AI algorithms from scratch before settling on the current implementation which looks very much like the "traditional" q-learning implementation. When you run the Q-learning AI, it won't have any training data. For moderately trained AI's, see the videos. Some of them do pretty well! Mostly not, though...
 
-> With <3 by @jpac
+> With 🍕 by @jpac
