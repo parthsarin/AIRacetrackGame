@@ -64,7 +64,7 @@ six==1.12.0
 snowballstemmer==1.2.1
 Sphinx==1.8.3
 sphinxcontrib-websupport==1.1.0
-spotipy==2.4.4
+spotipy==2.22.1
 terminado==0.8.1
 testpath==0.4.2
 tornado==5.1.1
